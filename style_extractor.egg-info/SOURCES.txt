@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+style_extractor/__init__.py
+style_extractor/extract.py
+style_extractor/tile.py
+style_extractor.egg-info/PKG-INFO
+style_extractor.egg-info/SOURCES.txt
+style_extractor.egg-info/dependency_links.txt
+style_extractor.egg-info/requires.txt
+style_extractor.egg-info/top_level.txt
+tests/test_extract.py

@@ -1,0 +1,36 @@
+[12:14:06] === Starting upload attempt batch ===
+[12:14:07] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[12:14:07] 429 detected — waiting 1800 seconds before retry
+[12:14:07] 22 packages remaining. Waiting 1800s before next attempt...
+[12:42:22] === Starting upload attempt batch ===
+[12:42:23] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[12:42:23] 429 detected — waiting 1800 seconds before retry
+[12:42:23] 22 packages remaining. Waiting 1800s before next attempt...
+[13:10:37] === Starting upload attempt batch ===
+[13:11:31] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[13:11:31] 429 detected — waiting 1800 seconds before retry
+[13:11:31] 22 packages remaining. Waiting 1800s before next attempt...
+[13:39:41] === Starting upload attempt batch ===
+[13:39:42] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[13:39:42] 429 detected — waiting 1800 seconds before retry
+[13:39:42] 22 packages remaining. Waiting 1800s before next attempt...
+[14:07:49] === Starting upload attempt batch ===
+[14:07:51] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[14:07:51] 429 detected — waiting 1800 seconds before retry
+[14:07:51] 22 packages remaining. Waiting 1800s before next attempt...
+[14:35:57] === Starting upload attempt batch ===
+[14:35:58] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[14:35:58] 429 detected — waiting 1800 seconds before retry
+[14:35:58] 22 packages remaining. Waiting 1800s before next attempt...
+[15:04:01] === Starting upload attempt batch ===
+[15:04:03] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[15:04:03] 429 detected — waiting 1800 seconds before retry
+[15:04:03] 22 packages remaining. Waiting 1800s before next attempt...
+[15:32:06] === Starting upload attempt batch ===
+[15:32:07] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[15:32:07] 429 detected — waiting 1800 seconds before retry
+[15:32:07] 22 packages remaining. Waiting 1800s before next attempt...
+[16:00:07] === Starting upload attempt batch ===
+[16:00:08] FAILED: agent-field —   [0m HTTPError: 429 Too Many Requests from https://upload.pypi.org/legacy/  
+[16:00:08] 429 detected — waiting 1800 seconds before retry
+[16:00:08] 22 packages remaining. Waiting 1800s before next attempt...

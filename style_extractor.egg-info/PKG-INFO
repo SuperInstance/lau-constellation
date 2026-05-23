@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: style-extractor
+Version: 0.1.0
+Summary: Extract musical style DNA from MIDI files using constraint theory
+Requires-Python: >=3.10
+Requires-Dist: mido>=1.3
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
