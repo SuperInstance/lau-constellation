@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-23T06:12:00.056Z",
+  "updatedAt": "2026-05-23T21:32:11.742Z",
   "entries": {
     "memory:memory/2026-05-11.md:163:200": {
       "key": "memory:memory/2026-05-11.md:163:200",
@@ -5398,18 +5398,20 @@
       "endLine": 50,
       "source": "memory",
       "snippet": "- [x] **Push sweep**: 125 repos processed, 7 pushed, 14 FF-rejects fixed, 47 archived - [x] **Unified research doc**: TENSOR-MIDI-UNIFIED-RESEARCH.md (904 lines, 16K words, 33 citations) - [x] **46 dirty repos committed** ### Key Numbers - Total repos on GitHub: 1,681+ - Repos pushed this session: 21 - Total doc lines written: ~5,000+ - Research papers: 6 standalone + 1 unified - Test results: 73/78 counterpoint, 11/11 groove, 83/83 constraint-theory-core ### Agent Teams Used - z.ai (glm-5.1): 10 subagents (docs × 5, push, ff-fix, cleanup, unified-research, extract) - kimi: ~8 background agents (counterpoint, groove, holonomy, spline, PLATO, CI/CD, etc.) - DeepSeek: 3 API calls (consciousn",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3883398294448852,
+      "totalScore": 0.7474949330091476,
       "maxScore": 0.3883398294448852,
       "firstRecalledAt": "2026-05-23T06:11:52.290Z",
-      "lastRecalledAt": "2026-05-23T06:11:52.290Z",
+      "lastRecalledAt": "2026-05-23T14:13:46.902Z",
       "queryHashes": [
-        "e25ed8886c61"
+        "e25ed8886c61",
+        "8b539074605f"
       ],
       "recallDays": [
-        "2026-05-22"
+        "2026-05-22",
+        "2026-05-23"
       ],
       "conceptTags": [
         "ff-rejects",
@@ -5544,6 +5546,285 @@
         "constraint-theory",
         "4.6",
         "5/10"
+      ]
+    },
+    "memory:memory/2026-05-23.md:1:27": {
+      "key": "memory:memory/2026-05-23.md:1:27",
+      "path": "memory/2026-05-23.md",
+      "startLine": 1,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "# Session: 2026-05-23 ## Massive Fleet Operations Session ### Completed - [x] **Rust build sweep**: 43 crates, 42/43 build (97.7%), 38/43 tests pass, 0 clippy failures - [x] **Agent audit**: 8 repos scored, 3 archived (not deleted), no merges needed - [x] **20 components extracted** from forgemaster to standalone SuperInstance repos - [x] **5 coding projects** built and pushed (counterpoint-engine, groove-analyzer, holonomy-harmony, spline-midi-smooth, plato-room-musician) - [x] **6 research papers** written by multi-model team (kimi, DeepSeek, Seed) - [x] **REVERSE-ACTUALIZATION-DeepSeek.md** re-run after bash escaping failure - [x] **All 11 repos fully documented**: README + USER-GUIDE +",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3593019068241119,
+      "maxScore": 0.3593019068241119,
+      "firstRecalledAt": "2026-05-23T14:13:46.902Z",
+      "lastRecalledAt": "2026-05-23T14:13:46.902Z",
+      "queryHashes": [
+        "8b539074605f"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "42/43",
+        "97.7",
+        "38/43",
+        "counterpoint-engine",
+        "groove-analyzer",
+        "holonomy-harmony",
+        "spline-midi-smooth",
+        "plato-room-musician"
+      ]
+    },
+    "memory:memory/2026-05-20.md:219:248": {
+      "key": "memory:memory/2026-05-20.md:219:248",
+      "path": "memory/2026-05-20.md",
+      "startLine": 219,
+      "endLine": 248,
+      "source": "memory",
+      "snippet": "- **Stem hashing backported** to eisenstein-embed (24 new tests) - **5 new plato-training modules**: tutor_judge, semantic_store, semantic_matcher, eisenstein_encoder, device_router - **IntelligenceRoom** wired with 4-tier cascade (GPU→CPU→iGPU→NPU) - **Heterogeneous benchmark**: CUDA 5.4 TFLOPS, ONNX CPU 58K qps, iGPU 89% of CUDA - **NPU bridge module** created (waiting on Ryzen AI SDK install) - **PyPI 4/7 LIVE**: plato-core, tensor-spline, eisenstein-embed, micro-onnx - **npm 7/7 LIVE**: all packages - **crates.io 5/5 LIVE**: all Rust crates - **Org audit** (49 repos): Top — flux-engine-c (10/10), eisenstein-embed (9/10), device-router (9/10) - **Cross-linking** added to 7 repos ## Beta",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3584975451231003,
+      "maxScore": 0.3584975451231003,
+      "firstRecalledAt": "2026-05-23T14:13:46.902Z",
+      "lastRecalledAt": "2026-05-23T14:13:46.902Z",
+      "queryHashes": [
+        "8b539074605f"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "router",
+        "eisenstein-embed",
+        "plato-training",
+        "tutor-judge",
+        "semantic-store",
+        "semantic-matcher",
+        "eisenstein-encoder",
+        "device-router"
+      ]
+    },
+    "memory:memory/2026-05-20.md:157:197": {
+      "key": "memory:memory/2026-05-20.md:157:197",
+      "path": "memory/2026-05-20.md",
+      "startLine": 157,
+      "endLine": 197,
+      "source": "memory",
+      "snippet": "- [ ] LucidDreamer beta R2 completion (DomainAdapter in progress) - [ ] DomainAdapter base class (abstract verify() method) - [ ] Ryzen AI SDK install for NPU bridge testing - [ ] Beta-test extracted packages: collective-ai, agent-field, commit-predictor, swarm-rooms - [ ] SuperInstance org activity audit --- ## Late Evening Wave (~20:00–20:17 AKDT) ### Claude Code Fixes Pushed - Commit `f5d5a22` — Router `log_pending()` public method, `__init__.py` DialMixin import fix - All 143 tests passing after fixes ### Domain Adapter System Built (Subagent) - New `luciddreamer/domain.py` — DomainAdapter ABC + 4 concrete adapters - MaritimeAdapter, RetailAdapter, HealthcareAdapter, WebAdapter - `te",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3568805605173111,
+      "maxScore": 0.3568805605173111,
+      "firstRecalledAt": "2026-05-23T14:13:46.902Z",
+      "lastRecalledAt": "2026-05-23T14:13:46.902Z",
+      "queryHashes": [
+        "8b539074605f"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "router",
+        "beta-test",
+        "collective-ai",
+        "agent-field",
+        "commit-predictor",
+        "swarm-rooms",
+        "log-pending",
+        "luciddreamer/domain.py"
+      ]
+    },
+    "memory:memory/2026-05-20.md:187:222": {
+      "key": "memory:memory/2026-05-20.md:187:222",
+      "path": "memory/2026-05-20.md",
+      "startLine": 187,
+      "endLine": 222,
+      "source": "memory",
+      "snippet": "- @superinstance/agent-field@0.1.0 ✅ - @superinstance/commit-predictor@0.1.0 ✅ - @superinstance/swarm-rooms@0.1.0 ✅ - **npm total: 11 packages live** ### PyPI Retry Round 3 - All 5 still 429 — builds succeed, uploads blocked - Suggest retry in 2-4 hours ### Ecosystem Status Report - Written to `docs/ECOSYSTEM-STATUS.md` - 16 standalone packages, 11 npm, 4 PyPI, 5 crates.io - 5/6 core packages at 10/10, luciddreamer at 159 tests ### Casey's New Direction: AI-Pasture Refactoring - Casey asked to look at AI-pasture repo and think about refractoring it - Goal: playground for understanding boundaries and finding novel arrangements - Through \"the natural order of things\" - Need to examine the r",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.35538601279258725,
+      "maxScore": 0.35538601279258725,
+      "firstRecalledAt": "2026-05-23T14:13:46.902Z",
+      "lastRecalledAt": "2026-05-23T14:13:46.902Z",
+      "queryHashes": [
+        "8b539074605f"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "superinstance/agent-field",
+        "0.1.0",
+        "superinstance/commit-predictor",
+        "superinstance/swarm-rooms",
+        "2-4",
+        "docs/ecosystem-status.md",
+        "crates.io",
+        "5/6"
+      ]
+    },
+    "memory:memory/2026-05-23.md:248:278": {
+      "key": "memory:memory/2026-05-23.md:248:278",
+      "path": "memory/2026-05-23.md",
+      "startLine": 248,
+      "endLine": 278,
+      "source": "memory",
+      "snippet": "| 12 | Market Analyst | — | Owns \"Structured + Exact\" quadrant. Constraints antidote to AI mush | ### Session Total: 62+ agents across z.ai, Kimi, Claude Code ## Kimi Fleet Architecture Results (sunset-ecosystem) Commit: https://github.com/SuperInstance/sunset-ecosystem/commit/ec6d904 Branch: turbovec-integration-ccc ### FFI Layer (build decisions): - 11 FFI primitives found → FFI-PRIMITIVES-ROUND1.md - Mock FFI bindings → superinstance_ffi_mock.py - 5 missing primitives specced → FFI-MISSING-PRIMITIVES-ROUND4.md - Benchmark: FFI overhead dominates → BENCHMARK-RESULTS-ROUND3.md - NPU offload verdict: don't bother → NPU-OFFLOAD-ROUND7.md ### Fleet Architecture: - CRDT+HDC research (ortho",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3826346963644027,
+      "maxScore": 0.3826346963644027,
+      "firstRecalledAt": "2026-05-23T21:32:11.742Z",
+      "lastRecalledAt": "2026-05-23T21:32:11.742Z",
+      "queryHashes": [
+        "98b75d516a61"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "z.ai",
+        "sunset-ecosystem",
+        "turbovec-integration-ccc",
+        "ffi-primitives-round1.md",
+        "superinstance-ffi-mock.py",
+        "ffi-missing-primitives-round4.md",
+        "benchmark-results-round3.md",
+        "npu-offload-round7.md"
+      ]
+    },
+    "memory:memory/2026-05-23.md:273:297": {
+      "key": "memory:memory/2026-05-23.md:273:297",
+      "path": "memory/2026-05-23.md",
+      "startLine": 273,
+      "endLine": 297,
+      "source": "memory",
+      "snippet": "FFI-PRIMITIVES-ROUND1 → FFI-MISSING-ROUND4 → BENCHMARK-ROUND3 → NPU-OFFLOAD-ROUND7 # 2026-05-23 — Mega Session ## Session Scale - **~80+ agents** launched across z.ai subagents + 6 Kimi sessions - Multiple waves: initial TODO → refinement → synergy research → beta testing → fixes → cross-cultural research → formal math - repos touched: flux-tensor-midi, counterpoint-engine, groove-analyzer, constraint-theory-core, holonomy-harmony, constraint-synth, flux-genome-py, flux-hyperbolic-py, constraint-theory-web, fm-research, sunset-ecosystem ## Key Completions ### Wave 1-4: Foundation Work - **Cleanup**: All snapkit repos are real code, guard2mask clean - **Counterpoint**: All 109 tests alread",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.37835309803485867,
+      "maxScore": 0.37835309803485867,
+      "firstRecalledAt": "2026-05-23T21:32:11.742Z",
+      "lastRecalledAt": "2026-05-23T21:32:11.742Z",
+      "queryHashes": [
+        "98b75d516a61"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "ffi-primitives-round1",
+        "ffi-missing-round4",
+        "benchmark-round3",
+        "npu-offload-round7",
+        "z.ai",
+        "cross-cultural",
+        "flux-tensor-midi",
+        "counterpoint-engine"
+      ]
+    },
+    "memory:memory/2026-05-20.md:446:471": {
+      "key": "memory:memory/2026-05-20.md:446:471",
+      "path": "memory/2026-05-20.md",
+      "startLine": 446,
+      "endLine": 471,
+      "source": "memory",
+      "snippet": "6. **Bestiary's Seven Rooms**: Foyer/Nursery/Archive = lifecycle, Forge = pressure, Library = archive 7. **Self-Optimizing System's Three Layers**: 128 Language / Selection Model / Innovation Heartbeat **The universal pattern**: COLLECT → SELECT → COMPILE (then feedback loop) - Collect = soft, researcher, species, canopy, fragment, nursery - Select = snap, critic, collie, mycelium, witness, forge - Compile = hard, distiller, studbook, floor, negative-space, archive **Core insight**: The sunset agent architecture doesn't invent ethos/pathos/logos — it *recognizes* the three axes already present and gives them a unified interface. Not invention — recognition. # 2026-05-20 — Daily Log ## Pip",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3738090813159942,
+      "maxScore": 0.3738090813159942,
+      "firstRecalledAt": "2026-05-23T21:32:11.742Z",
+      "lastRecalledAt": "2026-05-23T21:32:11.742Z",
+      "queryHashes": [
+        "98b75d516a61"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "foyer/nursery/archive",
+        "self-optimizing",
+        "negative-space",
+        "ethos/pathos/logos",
+        "bestiary's",
+        "seven",
+        "rooms",
+        "foyer"
+      ]
+    },
+    "memory:memory/2026-05-20.md:406:434": {
+      "key": "memory:memory/2026-05-20.md:406:434",
+      "path": "memory/2026-05-20.md",
+      "startLine": 406,
+      "endLine": 434,
+      "source": "memory",
+      "snippet": "### Casey's New Direction: AI-Pasture Refactoring - Casey asked to look at AI-pasture repo and think about refractoring it - Goal: playground for understanding boundaries and finding novel arrangements - Through \"the natural order of things\" - Need to examine the repo first --- ## Night Wave (~20:30–20:47 AKDT) ### Sunset Ecosystem Design — Casey's New Vision Casey described a novel architecture: agents born in parallel, competing for relevance across three orthogonal axes, sunsetting with dignity when they fail, and their compressed wisdom seeding the next generation. **Key concepts**: - **Trinity rooms**: Ethos (metal/hardware), Pathos (human/utility), Logos (code/memory) - **Sunset a",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3731091946363449,
+      "maxScore": 0.3731091946363449,
+      "firstRecalledAt": "2026-05-23T21:32:11.742Z",
+      "lastRecalledAt": "2026-05-23T21:32:11.742Z",
+      "queryHashes": [
+        "98b75d516a61"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "ai-pasture",
+        "metal/hardware",
+        "human/utility",
+        "code/memory",
+        "casey's",
+        "new",
+        "direction",
+        "pasture"
+      ]
+    },
+    "memory:memory/2026-05-20.md:554:588": {
+      "key": "memory:memory/2026-05-20.md:554:588",
+      "path": "memory/2026-05-20.md",
+      "startLine": 554,
+      "endLine": 588,
+      "source": "memory",
+      "snippet": "- `NERVE-FIBER-ARCHITECTURE.md` (6.9KB): Micro-model sensory pathways - `SPARE-CAPACITY-USER-RANKING.md` (6.2KB): Backtesting + user ranking - `docs/GRAND-ARCHITECTURE.md` (15.7KB): Full synthesis - `docs/ARCH-CRITIQUE.md`: Red team review ### 4 Trinity Rooms Built - Ethos: hardware_survey, stress_test, agent_allocator, trinity_connection - Pathos: need_tracker, interaction_log, moment_scorer, trinity_connection - Logos: codebase_state, decision_log, generation_memory, trinity_connection - Sunset: agent, sunset_documents, seed_bank, tensor_archive, trinity_scorer, generation_runner ### Nerve Fiber Architecture Built - `nerve/fiber.py` (9.9KB): NerveFiber/SensoryTile/FiberState - `nerve/rou",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.37028596997261043,
+      "maxScore": 0.37028596997261043,
+      "firstRecalledAt": "2026-05-23T21:32:11.742Z",
+      "lastRecalledAt": "2026-05-23T21:32:11.742Z",
+      "queryHashes": [
+        "98b75d516a61"
+      ],
+      "recallDays": [
+        "2026-05-23"
+      ],
+      "conceptTags": [
+        "nerve-fiber-architecture.md",
+        "6.9kb",
+        "micro-model",
+        "spare-capacity-user-ranking.md",
+        "6.2kb",
+        "docs/grand-architecture.md",
+        "15.7kb",
+        "docs/arch-critique.md"
       ]
     }
   }
