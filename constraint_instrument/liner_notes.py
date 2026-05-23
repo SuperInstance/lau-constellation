@@ -411,13 +411,19 @@ class LinerNotesGenerator:
         # ── Specific Musical Detail ──
         detail_parts = []
         if p.dominant_intervals:
-            top_interval = p.dominant_intervals[0]
-            interval_name = INTERVAL_NAMES.get(top_interval, f"a {top_interval}-semitone leap")
-            detail_parts.append(f"The phrasing leans on {interval_name}")
-            if len(p.dominant_intervals) > 1:
-                second_name = INTERVAL_NAMES.get(p.dominant_intervals[1], f"and {p.dominant_intervals[1]} semitones")
-                detail_parts[-1] += f", with {second_name} close behind"
-            detail_parts[-1] += "."
+            # Skip 0 (repeated notes) for the primary interval description
+            intervals_desc = [i for i in p.dominant_intervals if i > 0]
+            if intervals_desc:
+                top_interval = intervals_desc[0]
+                interval_name = INTERVAL_NAMES.get(top_interval, f"a {top_interval}-semitone leap")
+                detail_parts.append(f"The phrasing leans on {interval_name}")
+                if len(intervals_desc) > 1:
+                    second = intervals_desc[1]
+                    second_name = INTERVAL_NAMES.get(second, f"and {second} semitones")
+                    detail_parts[-1] += f", with {second_name} close behind"
+                detail_parts[-1] += "."
+            elif p.dominant_intervals[0] == 0:
+                detail_parts.append("The phrasing clings to repeated notes — hammering the same pitch like a point it refuses to drop.")
 
         # Pitch range detail
         if p.pitch_range[1] - p.pitch_range[0] > 24:
