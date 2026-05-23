@@ -635,6 +635,148 @@ class Monitor:
         self._vanished = False
         self._high_flow_streak = 0
 
+    # ── Public Flow API ───────────────────────────────────────────────────────
+
+    def listen(self, notes: list) -> dict:
+        """
+        Analyze a stream of notes and return a flow assessment.
+
+        Returns dict with: flow_state, error_rate, consistency, exploration,
+        energy, energy_trajectory, confidence, recommendation.
+        """
+        if not notes:
+            return {
+                "flow_state": self.flow_state,
+                "error_rate": 0.0,
+                "consistency": 0.5,
+                "exploration": 0.0,
+                "energy": 0.0,
+                "energy_trajectory": 0.0,
+                "confidence": min(1.0, len(self._snapshots) / 10.0),
+                "recommendation": "waiting for input",
+            }
+
+        snapshot = self._take_snapshot(notes)
+        assessment = self._assess_flow(snapshot)
+        self._update_state(snapshot, assessment)
+        self._check_vanishing()
+
+        velocities = [n.get("velocity", 80) for n in notes]
+        energy = _mean(velocities) / 127.0
+
+        if len(velocities) >= 4:
+            mid = len(velocities) // 2
+            energy_trajectory = (_mean(velocities[mid:]) - _mean(velocities[:mid])) / 127.0
+        else:
+            energy_trajectory = 0.0
+
+        if self.flow_state > 0.8:
+            recommendation = "deep flow — keep going"
+        elif self.flow_state > 0.5:
+            recommendation = "finding groove — steady"
+        elif self.flow_state > 0.3:
+            recommendation = "unsettled — finding way"
+        else:
+            recommendation = "struggling — could use support"
+
+        return {
+            "flow_state": round(self.flow_state, 4),
+            "error_rate": round(snapshot.error_rate, 4),
+            "consistency": round(snapshot.consistency, 4),
+            "exploration": round(snapshot.exploration_velocity, 4),
+            "energy": round(energy, 4),
+            "energy_trajectory": round(energy_trajectory, 4),
+            "confidence": round(assessment.confidence, 4),
+            "recommendation": recommendation,
+        }
+
+    def assist(self, candidates: list) -> list:
+        """
+        Reorder/filter candidates based on current flow state.
+
+        High flow (>0.8): return as-is. Don't touch.
+        Medium flow (0.3-0.8): reorder — put best choices first.
+        Low flow (<0.3): add gentle correction toward constraint surface.
+
+        Each candidate should be a dict with at least 'pitch'.
+        """
+        if not candidates:
+            return candidates
+
+        # High flow: do nothing
+        if self.flow_state > 0.8:
+            return candidates
+
+        t = self.learned_tendencies
+        scored = []
+        for c in candidates:
+            bonus = 0.0
+            pitch = c.get("pitch", 60)
+            interval = c.get("interval", 0)
+
+            # Bonus for preferred register
+            pref_low, pref_high = t.register_preference
+            if pref_low <= pitch <= pref_high:
+                bonus += 0.2
+
+            # Bonus for favorite intervals
+            if interval in t.favorite_intervals:
+                bonus += t.favorite_intervals[interval] * 0.3
+
+            # Bonus for matching velocity tendency
+            vel = c.get("velocity", t.average_velocity)
+            vel_match = 1.0 - abs(vel - t.average_velocity) / 127.0
+            bonus += vel_match * 0.1
+
+            scored.append((c, c.get("score", 0.5) + bonus))
+
+        scored.sort(key=lambda x: -x[1])
+        result = [c for c, s in scored]
+
+        # Low flow: snap toward constraint surface
+        if self.flow_state < 0.3:
+            pref_center = (t.register_preference[0] + t.register_preference[1]) / 2
+            best_interval = max(t.favorite_intervals, key=t.favorite_intervals.get) if t.favorite_intervals else 3
+            guided = {
+                "pitch": int(pref_center),
+                "interval": best_interval,
+                "velocity": int(t.average_velocity),
+                "score": 1.0,
+                "_monitor_guided": True,
+            }
+            result.insert(0, guided)
+
+        return result
+
+    def learn(self, notes: list):
+        """Public learning interface. Update learned tendencies from a performance."""
+        self._learn(notes)
+
+    def check_vanish(self) -> bool:
+        """
+        Should the monitor vanish?
+
+        Vanish when: flow_state > 0.9 sustained, error_rate < 0.05,
+        no recent interventions.
+        """
+        if self._vanished:
+            return True
+
+        recent_errors = list(self.error_history)[-20:]
+        low_errors = all(e < 0.05 for e in recent_errors) if recent_errors else False
+
+        recent_flow = list(self.flow_history)[-50:]
+        sustained_high_flow = (
+            len(recent_flow) >= 20 and
+            all(f > 0.9 for f in recent_flow[-20:])
+        )
+
+        if sustained_high_flow and low_errors and self.intervention_count == 0:
+            self._vanished = True
+            return True
+
+        return False
+
     # ── Adaptive Constraint Surface ───────────────────────────────────
 
     def get_adaptive_surface(self) -> dict:
