@@ -24,7 +24,12 @@ from .instrument import Instrument, resolve_key, resolve_terrain, TERRAIN_ALIASE
 from .terrain import Terrain, TERRAINS
 from .analyzer import ConstraintAnalyzer
 from .texture import TextureAutomation, TextureCurve
+from .chords import Chord, ChordProgression, ChordGenerator, nudge_to_chord_tones
 from .seed_manager import SeedManager
+from .exercises import ExerciseGenerator, Exercise, format_exercise, format_workout
 
 __version__ = "0.2.0"
-__all__ = ["Instrument", "Terrain", "TERRAINS", "resolve_key", "resolve_terrain", "ConstraintAnalyzer", "TextureAutomation", "TextureCurve", "SeedManager"]
+__all__ = ["Instrument", "Terrain", "TERRAINS", "resolve_key", "resolve_terrain",
+           "ConstraintAnalyzer", "TextureAutomation", "TextureCurve", "SeedManager",
+           "Chord", "ChordProgression", "ChordGenerator", "nudge_to_chord_tones",
+           "ExerciseGenerator", "Exercise", "format_exercise", "format_workout"]

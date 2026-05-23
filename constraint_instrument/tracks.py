@@ -26,6 +26,7 @@ from typing import Dict, List, Optional
 
 from .instrument import Instrument, resolve_key, resolve_terrain, _render_to_wav, _render_to_midi
 from .terrain import TERRAINS
+from .chords import ChordGenerator, ChordProgression, nudge_to_chord_tones
 
 
 class Track:
@@ -230,6 +231,7 @@ class Arrangement:
         self.seed = seed
         self.tracks: List[Track] = []
         self._loop_count = 1  # How many times the arrangement has been looped
+        self._progression: Optional[ChordProgression] = None
 
     def add_track(self, name: str, mode: str, terrain: str,
                   voice: str = 'piano') -> Track:
@@ -252,6 +254,21 @@ class Arrangement:
         self.tracks.append(track)
         return track
 
+    def set_chords(self, progression: ChordProgression) -> 'Arrangement':
+        """Set a chord progression for all tracks.
+
+        After calling this, generate_all() will nudge all notes toward
+        the chord changes.
+
+        Args:
+            progression: A ChordProgression to follow
+
+        Returns:
+            self (for chaining)
+        """
+        self._progression = progression
+        return self
+
     def generate_all(self) -> 'Arrangement':
         """Generate notes for all tracks.
 
@@ -260,6 +277,15 @@ class Arrangement:
         """
         for track in self.tracks:
             track.generate(bars=self.bars, key=self.key, bpm=self.bpm)
+
+        # Apply chord constraints if a progression is set
+        if self._progression:
+            rng = random.Random(self.seed)
+            for track in self.tracks:
+                if track.notes:
+                    track.notes = nudge_to_chord_tones(
+                        track.notes, self._progression, strictness=0.6, rng=rng)
+
         return self
 
     def loop(self, times: int = 4) -> 'Arrangement':

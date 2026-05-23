@@ -30,6 +30,8 @@ from .goodman import GoodmanEngine, DiagnosticReport
 from .armstrong import ArmstrongEngine
 from .ella import EllaEngine
 from .seed_manager import SeedManager
+from .liner_notes import LinerNotesGenerator, build_performance
+from .chords import ChordGenerator, ChordProgression, nudge_to_chord_tones
 
 
 # ── Key Resolution ───────────────────────────────────────────────────
@@ -326,7 +328,8 @@ class Instrument:
     MODES = ("parker", "miles", "ellington", "basie", "goodman", "armstrong", "ella")
 
     def __init__(self, mode: str = "ella", terrain: str = "blues",
-                 key = 'C', bpm: int = 100, bars: int = 4, seed = None):
+                 key = 'C', bpm: int = 100, bars: int = 4, seed = None,
+                 chords: bool = False):
         """
         Create an Instrument.
         
@@ -352,11 +355,20 @@ class Instrument:
         self.terrain_name = terrain_key
         self._terrain = TERRAINS[terrain_key]
         self._key = resolve_key(key)
+        self._key_name = str(key) if isinstance(key, str) else 'C'
         if bars < 1:
             raise ValueError("bars must be >= 1")
         self.bpm = int(bpm)
         self.bars = int(bars)
         self._last_notes: Optional[List[dict]] = None
+
+        # Chord progression support
+        self.chords_enabled = bool(chords)
+        self._progression: Optional[ChordProgression] = None
+        if self.chords_enabled:
+            gen = ChordGenerator(key=self._key_name if hasattr(self, '_key_name') else 'C',
+                                 bpm=self.bpm, bars=self.bars, seed=seed)
+            self._progression = gen.generate(self.terrain_name)
 
         # Seed manager for deterministic reproducibility
         self._seed_manager = SeedManager(master_seed=seed) if seed is not None else None
@@ -447,6 +459,12 @@ class Instrument:
 
         # Normalize to consistent format
         notes = _normalize_notes(raw_notes, bpm=use_bpm, bars=use_bars, key=self._key)
+
+        # Apply chord constraints if enabled
+        if self._progression and self.chords_enabled:
+            rng = random.Random(self._seed_manager.master_seed if self._seed_manager else None)
+            notes = nudge_to_chord_tones(notes, self._progression, strictness=0.7, rng=rng)
+
         self._last_notes = notes
         return notes
 
@@ -510,6 +528,39 @@ class Instrument:
             self.perform()
         render_bpm = bpm or self.bpm
         return _render_to_midi(self._last_notes, render_bpm, filepath)
+
+    def liner_notes(self, style: str = 'full') -> str:
+        """Generate liner notes for the last performance.
+        
+        Args:
+            style: 'full' (80-150 words), 'short' (one sentence), 'review' (DownBeat-style review)
+        
+        Returns:
+            Prose description of the performance.
+        """
+        if self._last_notes is None:
+            self.perform()
+
+        # Get terrain description
+        terrain_desc = self._terrain.description if hasattr(self._terrain, 'description') else ""
+
+        perf = build_performance(
+            notes=self._last_notes,
+            mode=self.mode,
+            terrain=self.terrain_name,
+            key=self._key,
+            bpm=self.bpm,
+            bars=self.bars,
+            terrain_description=terrain_desc,
+        )
+
+        gen = LinerNotesGenerator()
+        if style == 'short':
+            return gen.generate_short(perf)
+        elif style == 'review':
+            return gen.generate_review(perf)
+        else:
+            return gen.generate(perf)
 
     def diagnose(self, source=None) -> 'DiagnosticReport':
         """
@@ -585,7 +636,54 @@ class Instrument:
         assert self.mode == "goodman", "prescribe() is only available in Goodman mode"
         return self._engine.prescribe(missing_order, **kwargs)
 
+    def prescribe_exercises(self, difficulty: float = 0.5) -> list:
+        """Generate personalized exercises based on the last diagnostic.
+
+        Performs a diagnosis if needed, then targets the weakest orders.
+
+        Args:
+            difficulty: 0.0 (easy) to 1.0 (hard)
+
+        Returns: List of Exercise objects.
+        """
+        from .exercises import ExerciseGenerator
+
+        report = self.diagnose()
+
+        # Extract scores from the diagnostic report
+        scores = {}
+        for o in report.orders:
+            name = o.name.lower()
+            if name in ExerciseGenerator.ORDER_NAMES:
+                scores[name] = o.score
+
+        gen = ExerciseGenerator()
+        return gen.prescribe(scores, difficulty=difficulty,
+                            terrain=self.terrain_name,
+                            key=str(self._key),
+                            bpm=self.bpm)
+
     # ── Info ─────────────────────────────────────────────────────────
+
+    def set_progression(self, progression: ChordProgression) -> 'Instrument':
+        """Set a chord progression for this instrument.
+
+        Notes generated by perform() will be nudged toward chord tones.
+
+        Args:
+            progression: A ChordProgression to follow
+
+        Returns:
+            self (for chaining)
+        """
+        self._progression = progression
+        self.chords_enabled = True
+        return self
+
+    @property
+    def progression(self) -> Optional[ChordProgression]:
+        """The current chord progression, if any."""
+        return self._progression
 
     @property
     def info(self) -> dict:
@@ -597,6 +695,8 @@ class Instrument:
             "bpm": self.bpm,
             "bars": self.bars,
             "seed": self._seed_manager.master_seed if self._seed_manager else None,
+            "chords": self.chords_enabled,
+            "progression": str(self._progression) if self._progression else None,
             "has_performance": self._last_notes is not None,
             "note_count": len(self._last_notes) if self._last_notes else 0,
         }

@@ -30,6 +30,7 @@ from . import Instrument, TERRAINS
 from .instrument import resolve_terrain, TERRAIN_ALIASES, NOTE_TO_MIDI
 from .analyzer import ConstraintAnalyzer, print_analysis_report
 from .genre_brain import GenreBrain, genre_summary_table
+from .exercises import ExerciseGenerator, Exercise, format_exercise, format_workout
 
 
 def cmd_quick(args):
@@ -56,11 +57,14 @@ def cmd_quick(args):
             bpm=args.bpm,
             bars=args.bars,
             seed=getattr(args, 'seed', None),
+            chords=getattr(args, 'chords', False),
         )
     notes = inst.perform()
     print(f"  Mode:    {inst.mode}")
     print(f"  Terrain: {inst.terrain_name}")
     print(f"  Key:     {inst._key} | BPM: {inst.bpm} | Bars: {inst.bars}")
+    if inst.chords_enabled and inst.progression:
+        print(f"  Chords:  {' → '.join(inst.progression.to_roman())}")
     print(f"  Notes:   {len(notes)}")
 
     if args.output:
@@ -86,6 +90,17 @@ def cmd_quick(args):
         print()
         report = inst.diagnose()
         print(report)
+
+    if args.liner_notes or args.review or args.short_notes:
+        print()
+        if args.review:
+            style = 'review'
+        elif args.short_notes:
+            style = 'short'
+        else:
+            style = 'full'
+        notes = inst.liner_notes(style=style)
+        print(notes)
 
 
 def cmd_diagnose_file(args):
@@ -435,6 +450,29 @@ def cmd_repl(args):
             print(f"Unknown command: {cmd}. Type 'help' for commands.")
 
 
+def cmd_exercise(args):
+    """Generate a single exercise for a specific order."""
+    gen = ExerciseGenerator()
+    ex = gen.for_order(args.order, difficulty=args.difficulty,
+                      terrain=args.terrain, key=args.key, bpm=args.bpm)
+    print(format_exercise(ex))
+
+
+def cmd_workout(args):
+    """Generate a full workout."""
+    gen = ExerciseGenerator()
+    exercises = gen.workout(terrain=args.terrain, key=args.key,
+                           bpm=args.bpm, difficulty=args.difficulty)
+    print(format_workout(exercises))
+
+
+def cmd_prescribe(args):
+    """Generate personalized exercises from a diagnostic report."""
+    gen = ExerciseGenerator()
+    exercises = gen.from_report_file(args.report_file)
+    print(format_workout(exercises))
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="constraint_instrument",
@@ -469,6 +507,14 @@ def main():
                         help="Master seed for deterministic reproducibility. Same seed + same params = identical output.")
     parser.add_argument("--list-terrains", action="store_true",
                         help="List all available terrains")
+    parser.add_argument("--chords", "-C", action="store_true",
+                        help="Enable chord progression generation. Notes follow the changes.")
+    parser.add_argument("--liner-notes", action="store_true",
+                        help="Print liner notes for the generated performance")
+    parser.add_argument("--review", action="store_true",
+                        help="Print a DownBeat-style review of the performance")
+    parser.add_argument("--short-notes", action="store_true",
+                        help="Print a one-sentence DJ intro for the performance")
     parser.add_argument("--list-genres", action="store_true",
                         help="List all available genre presets")
 
@@ -494,6 +540,45 @@ def main():
     compare_parser.add_argument("--label-a", default=None, help="Label for first file")
     compare_parser.add_argument("--label-b", default=None, help="Label for second file")
 
+    # Subcommand: exercise (single exercise for an order)
+    exercise_parser = sub.add_parser("exercise", help="Generate a targeted exercise for a specific order")
+    exercise_parser.add_argument("--order", "-o", required=True,
+                                 choices=['position', 'direction', 'curvature', 'structure'],
+                                 help="Which diagnostic order to target")
+    exercise_parser.add_argument("--difficulty", "-d", type=float, default=0.5,
+                                 help="Difficulty 0.0-1.0 (default: 0.5)")
+    exercise_parser.add_argument("--terrain", "-t", default="modal_jazz",
+                                 help="Terrain suggestion (default: modal_jazz)")
+    exercise_parser.add_argument("--key", "-k", default="C",
+                                 help="Key suggestion (default: C)")
+    exercise_parser.add_argument("--bpm", "-b", type=int, default=100,
+                                 help="Base BPM (default: 100)")
+
+    # Subcommand: workout (full workout, one exercise per order)
+    workout_parser = sub.add_parser("workout", help="Generate a full workout (4 exercises, one per order)")
+    workout_parser.add_argument("--terrain", "-t", default="modal_jazz",
+                                help="Terrain suggestion (default: modal_jazz)")
+    workout_parser.add_argument("--key", "-k", default="C",
+                                help="Key suggestion (default: C)")
+    workout_parser.add_argument("--bpm", "-b", type=int, default=100,
+                                help="Base BPM (default: 100)")
+    workout_parser.add_argument("--difficulty", "-d", type=float, default=0.5,
+                                help="Difficulty 0.0-1.0 (default: 0.5)")
+
+    # Subcommand: prescribe (personalized exercises from diagnostic report)
+    prescribe_parser = sub.add_parser("prescribe", help="Generate personalized exercises from a diagnostic report")
+    prescribe_parser.add_argument("--from-report", "-r", required=True,
+                                  dest="report_file",
+                                  help="Path to diagnostic JSON report")
+    prescribe_parser.add_argument("--difficulty", "-d", type=float, default=0.5,
+                                  help="Difficulty 0.0-1.0 (default: 0.5)")
+    prescribe_parser.add_argument("--terrain", "-t", default="modal_jazz",
+                                  help="Terrain suggestion (default: modal_jazz)")
+    prescribe_parser.add_argument("--key", "-k", default="C",
+                                  help="Key suggestion (default: C)")
+    prescribe_parser.add_argument("--bpm", "-b", type=int, default=100,
+                                  help="Base BPM (default: 100)")
+
     args = parser.parse_args()
 
     if args.command == "diagnose":
@@ -502,6 +587,12 @@ def main():
         cmd_analyze(args)
     elif args.command == "compare":
         cmd_compare(args)
+    elif args.command == "exercise":
+        cmd_exercise(args)
+    elif args.command == "workout":
+        cmd_workout(args)
+    elif args.command == "prescribe":
+        cmd_prescribe(args)
     elif args.list_terrains:
         cmd_terrains(args)
     elif args.list_genres:
