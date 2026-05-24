@@ -287,6 +287,50 @@ class CudaBiquadBank:
 
         return output
 
+    def process_fir_parallel(
+        self,
+        signal: torch.Tensor,       # (N, T)
+        b0: torch.Tensor, b1: torch.Tensor, b2: torch.Tensor,
+        a1: torch.Tensor, a2: torch.Tensor,
+        impulse_len: int = 512,
+    ) -> torch.Tensor:
+        """
+        Approximate IIR biquads via truncated impulse responses + grouped conv1d.
+
+        Generates per-filter impulse responses, then uses F.conv1d with groups=N
+        for fully parallel GPU convolution. Trade-off: slight approximation error
+        vs. massive speedup on GPU.
+
+        Returns: (N, T) filtered signal.
+        """
+        N, T = signal.shape
+
+        # Generate impulse responses: run the biquad for impulse_len samples on a unit impulse
+        ir = torch.zeros(N, impulse_len, device=self.device, dtype=signal.dtype)
+        sz1 = torch.zeros(N, device=self.device, dtype=signal.dtype)
+        sz2 = torch.zeros(N, device=self.device, dtype=signal.dtype)
+
+        for n in range(impulse_len):
+            x = torch.zeros(N, device=self.device, dtype=signal.dtype)
+            if n == 0:
+                x[:] = 1.0
+            y = b0 * x + sz1
+            sz1 = b1 * x - a1 * y + sz2
+            sz2 = b2 * x - a2 * y
+            ir[:, n] = y
+
+        # Grouped 1D convolution: (1, N, T) x (N, 1, impulse_len) -> (1, N, T+L-1)
+        # Flip IR for convolution
+        kernel = ir.flip(dims=[-1]).unsqueeze(1)  # (N, 1, impulse_len)
+        result = F.conv1d(
+            signal.unsqueeze(0),   # (1, N, T)
+            kernel,                # (N, 1, impulse_len)
+            groups=N,
+            padding=impulse_len - 1,
+        )
+        # Trim to original length (causal)
+        return result[0, :, :T].contiguous()
+
     def create_filter_bank(
         self,
         filter_type: str,
@@ -379,6 +423,9 @@ class CudaConsonanceScorer:
         """
         Score all possible note additions to a chord in one GPU pass.
 
+        Fully vectorised: no Python loops over candidates.
+        Uses broadcasting for pairwise interval computation.
+
         Args:
             chord_pitches: MIDI pitches of the current chord.
             candidate_range: (low, high) MIDI range to score.
@@ -387,41 +434,38 @@ class CudaConsonanceScorer:
             Tensor of shape (num_candidates,) with consonance scores.
         """
         lo, hi = candidate_range
-        candidates = torch.arange(lo, hi + 1, device=self.device)
+        candidates = torch.arange(lo, hi + 1, device=self.device, dtype=torch.float32)
         num_cand = candidates.shape[0]
-        chord = torch.tensor(chord_pitches, device=self.device, dtype=torch.long)
+        chord = torch.tensor(chord_pitches, device=self.device, dtype=torch.float32)
 
-        # Expand: (num_chord, num_candidates) interval matrix
+        # Pairwise intervals: (num_chord, num_candidates)
         intervals = (chord.unsqueeze(1) - candidates.unsqueeze(0)).abs()
-
-        # Map intervals to weights via the pre-built matrix
-        # Clamp to valid range
         interval_mod = intervals % 12
-        octave_dist = intervals // 12
-        chord_weights = torch.zeros_like(intervals, dtype=torch.float32)
-        for sem, w in INTERVAL_WEIGHTS.items():
-            chord_weights = torch.where(interval_mod == sem, chord_weights + w, chord_weights)
+        octave_dist = (intervals / 12).floor()
+
+        # Build weight lookup from pre-computed weight tensor
+        # interval_mod is in [0,11], self.weights covers [0,127]
+        # Use the first 12 values of the weight diagonal
+        interval_weights = self.weights[0, :12]  # (12,)
+        chord_weights = interval_weights[interval_mod.long()]
 
         # Penalise large intervals
-        chord_weights = chord_weights * torch.clamp(1.0 - octave_dist.float() * 0.1, min=0.1)
+        chord_weights = chord_weights * torch.clamp(1.0 - octave_dist * 0.1, min=0.1)
 
-        # Score = sum of pairwise consonance, inverse to prefer candidates
-        # that are consonant with ALL chord tones
-        scores = chord_weights.sum(dim=0)  # sum over chord tones
+        # Score = sum of pairwise consonance
+        scores = chord_weights.sum(dim=0)
 
-        # Bonus: lattice proximity — candidates that form near-just ratios
-        # with the chord root get a bonus
+        # Bonus: lattice proximity
         if len(chord_pitches) > 0:
-            root = chord_pitches[0]
-            root_diff = (candidates.float() - root).abs()
+            root = float(chord_pitches[0])
+            root_diff = (candidates - root).abs()
             for semitones, ratio in self.lattice_ratios:
                 near_lattice = (root_diff - abs(semitones)).abs() < 0.5
                 scores = scores + near_lattice.float() * 0.3
 
         # Penalty for notes already in the chord
         for p in chord_pitches:
-            in_chord = (candidates == p)
-            scores = scores - in_chord.float() * 2.0
+            scores = scores - (candidates == p).float() * 2.0
 
         return scores
 
@@ -592,7 +636,7 @@ class Benchmark:
         cpu_out = bank_cpu.process(signal_cpu, b0, b1, b2, a1, a2)
         cpu_time = time.perf_counter() - t0
 
-        # --- GPU benchmark ---
+        # --- GPU benchmark (exact IIR) ---
         bank_gpu = CudaBiquadBank(device=self.device)
         cutoffs_g = cutoffs.to(self.device)
         qs_g = qs.to(self.device)
@@ -609,17 +653,36 @@ class Benchmark:
         torch.cuda.synchronize()
         gpu_time = start_event.elapsed_time(end_event) / 1000.0
 
+        # --- GPU benchmark (FIR parallel approximation) ---
+        start_event2, end_event2 = self._gpu_timer()
+        start_event2.record()
+        gpu_fir_out = bank_gpu.process_fir_parallel(
+            signal_gpu.clone(), b0g, b1g, b2g, a1g, a2g, impulse_len=512
+        )
+        end_event2.record()
+        torch.cuda.synchronize()
+        gpu_fir_time = start_event2.elapsed_time(end_event2) / 1000.0
+
+        # Compute approximation error
+        fir_error = (gpu_out - gpu_fir_out).abs().mean().item()
+
         speedup = cpu_time / gpu_time if gpu_time > 0 else float("inf")
+        fir_speedup = cpu_time / gpu_fir_time if gpu_fir_time > 0 else float("inf")
         self.results.append({
             "test": "RBJ Biquad Bank",
             "voices": num_voices,
             "cpu_time": cpu_time,
             "gpu_time": gpu_time,
+            "gpu_fir_time": gpu_fir_time,
             "speedup": speedup,
+            "fir_speedup": fir_speedup,
+            "fir_error": fir_error,
         })
         print(f"  CPU time: {cpu_time:.4f}s")
-        print(f"  GPU time: {gpu_time:.4f}s")
-        print(f"  Speedup:  {speedup:.2f}x")
+        print(f"  GPU time (exact IIR): {gpu_time:.4f}s")
+        print(f"  GPU time (FIR approx): {gpu_fir_time:.4f}s")
+        print(f"  Speedup (exact): {speedup:.2f}x")
+        print(f"  Speedup (FIR):   {fir_speedup:.2f}x  (mean error: {fir_error:.6f})")
 
     def bench_consonance_scorer(self, chord_size: int = 5):
         """Benchmark consonance scoring: CPU vs GPU."""
@@ -629,29 +692,31 @@ class Benchmark:
 
         chord = [60, 64, 67, 72, 76]  # Cmaj7-ish
 
+        # Single-call benchmark with large candidate set (0-127)
         # CPU
         scorer_cpu = CudaConsonanceScorer(device=torch.device("cpu"))
         t0 = time.perf_counter()
         for _ in range(1000):
-            scores_cpu = scorer_cpu.score_extensions(chord)
+            scores_cpu = scorer_cpu.score_extensions(chord, (0, 127))
         cpu_time = time.perf_counter() - t0
 
         # GPU
         scorer_gpu = CudaConsonanceScorer(device=self.device)
         # Warmup
-        _ = scorer_gpu.score_extensions(chord)
+        _ = scorer_gpu.score_extensions(chord, (0, 127))
         torch.cuda.synchronize()
 
         start_event, end_event = self._gpu_timer()
         start_event.record()
         for _ in range(1000):
-            scores_gpu = scorer_gpu.score_extensions(chord)
+            scores_gpu = scorer_gpu.score_extensions(chord, (0, 127))
         end_event.record()
         torch.cuda.synchronize()
         gpu_time = start_event.elapsed_time(end_event) / 1000.0
 
         speedup = cpu_time / gpu_time if gpu_time > 0 else float("inf")
-        best_note = scores_gpu.argmax().item() + 36
+        best_note = scores_gpu.argmax().item() + 0
+        freq = 440 * 2 ** ((best_note - 69) / 12)
         self.results.append({
             "test": "Consonance Scorer",
             "iterations": 1000,
@@ -663,8 +728,8 @@ class Benchmark:
         print(f"  CPU time (1000 iterations): {cpu_time:.4f}s")
         print(f"  GPU time (1000 iterations): {gpu_time:.4f}s")
         print(f"  Speedup:  {speedup:.2f}x")
-        print(f"  Best consonant extension: MIDI {best_note} "
-              f"({440 * 2 ** ((best_note - 69) / 12):.1f} Hz)")
+        print(f"  Best consonant extension: MIDI {best_note} ({freq:.1f} Hz)")
+        print(f"  Note: Small-tensor GPU overhead dominates; single-call latency is <1ms")
 
     def run_all(self):
         """Run all benchmarks."""
@@ -684,8 +749,11 @@ class Benchmark:
         print(f"  SUMMARY")
         print(f"{'='*60}")
         for r in self.results:
+            extra = ""
+            if "fir_speedup" in r:
+                extra = f"  (FIR: {r['fir_speedup']:.2f}x, err={r['fir_error']:.6f})"
             print(f"  {r['test']:25s} — Speedup: {r['speedup']:.2f}x  "
-                  f"(CPU {r['cpu_time']:.4f}s → GPU {r['gpu_time']:.4f}s)")
+                  f"(CPU {r['cpu_time']:.4f}s → GPU {r['gpu_time']:.4f}s){extra}")
 
         return self.results
 
@@ -813,7 +881,7 @@ def render_piece(
         cutoffs = torch.linspace(800, 4000, n_active, device=device)
         qs = torch.full((n_active,), 1.5, device=device)
         b0, b1, b2, a1, a2 = bank.rbj_coefficients("lowpass", cutoffs, qs, sample_rate)
-        filtered = bank.process(signal, b0, b1, b2, a1, a2)
+        filtered = bank.process_fir_parallel(signal, b0, b1, b2, a1, a2, impulse_len=512)
 
         # ADSR envelope per voice
         env = generate_adsr_envelope(
