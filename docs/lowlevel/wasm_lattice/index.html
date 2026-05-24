@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lattice Oscillator — Constraint Theory Synthesizer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            color: #00ff88;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+
+        header p {
+            font-size: 0.8rem;
+            color: #666;
+            letter-spacing: 0.05em;
+        }
+
+        main {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 1rem 2rem;
+        }
+
+        /* Waveform display */
+        .waveform-container {
+            background: #0d0d14;
+            border: 1px solid #1a1a2e;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .waveform-container canvas {
+            width: 100%;
+            height: 150px;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .waveform-label {
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            font-size: 0.65rem;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Dial section */
+        .dials {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dial {
+            background: #0d0d14;
+            border: 1px solid #1a1a2e;
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .dial:hover {
+            border-color: #333;
+        }
+
+        .dial-name {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #888;
+            margin-bottom: 0.8rem;
+        }
+
+        .dial-value {
+            font-size: 1.8rem;
+            font-weight: 200;
+            color: #00ff88;
+            margin-bottom: 1rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dial:nth-child(2) .dial-value { color: #ff6644; }
+        .dial:nth-child(3) .dial-value { color: #4488ff; }
+
+        /* Custom range slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #1a1a2e;
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00ff88;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,255,136,0.3);
+        }
+
+        .dial:nth-child(2) input[type="range"]::-webkit-slider-thumb {
+            background: #ff6644;
+            box-shadow: 0 0 10px rgba(255,102,68,0.3);
+        }
+
+        .dial:nth-child(3) input[type="range"]::-webkit-slider-thumb {
+            background: #4488ff;
+            box-shadow: 0 0 10px rgba(68,136,255,0.3);
+        }
+
+        /* Piano keyboard */
+        .keyboard-container {
+            background: #0d0d14;
+            border: 1px solid #1a1a2e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .keyboard-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .keyboard {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .key {
+            width: 40px;
+            height: 120px;
+            border-radius: 0 0 6px 6px;
+            cursor: pointer;
+            transition: all 0.1s;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 8px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .key.white {
+            background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+            border: 1px solid #ccc;
+            color: #666;
+            z-index: 1;
+        }
+
+        .key.white:hover {
+            background: linear-gradient(to bottom, #fff, #f0f0f0);
+        }
+
+        .key.white.active {
+            background: linear-gradient(to bottom, #00ff88, #00cc66);
+            box-shadow: 0 0 15px rgba(0,255,136,0.4);
+        }
+
+        .key.black {
+            background: linear-gradient(to bottom, #333, #111);
+            border: 1px solid #000;
+            width: 28px;
+            height: 75px;
+            margin: 0 -14px;
+            z-index: 2;
+            color: #888;
+        }
+
+        .key.black:hover {
+            background: linear-gradient(to bottom, #444, #222);
+        }
+
+        .key.black.active {
+            background: linear-gradient(to bottom, #00cc66, #009944);
+            box-shadow: 0 0 15px rgba(0,255,136,0.4);
+        }
+
+        .key span {
+            font-size: 0.55rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Info panel */
+        .info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .info-card {
+            background: #0d0d14;
+            border: 1px solid #1a1a2e;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #aaa;
+        }
+
+        /* Start button */
+        .start-btn {
+            display: block;
+            margin: 0 auto 1.5rem;
+            padding: 0.8rem 2.5rem;
+            background: transparent;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            font-family: inherit;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            background: #00ff88;
+            color: #0a0a0f;
+        }
+
+        .start-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #444;
+            margin-bottom: 1rem;
+            min-height: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .dials { grid-template-columns: 1fr; gap: 1rem; }
+            .info { grid-template-columns: repeat(2, 1fr); }
+            .key { width: 30px; height: 90px; }
+            .key.black { width: 22px; height: 55px; margin: 0 -11px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lattice Oscillator</h1>
+        <p>Constraint-theory additive synthesis — dial-controlled harmonic lattice</p>
+    </header>
+
+    <main>
+        <div class="status" id="status">Click "Start" to initialize audio engine</div>
+
+        <button class="start-btn" id="startBtn" onclick="startEngine()">
+            ▶ Start Engine
+        </button>
+
+        <!-- Waveform display -->
+        <div class="waveform-container">
+            <span class="waveform-label">Waveform</span>
+            <canvas id="waveform" width="880" height="150"></canvas>
+        </div>
+
+        <!-- Three dials -->
+        <div class="dials">
+            <div class="dial">
+                <div class="dial-name">I·vertical — Harmonic Range</div>
+                <div class="dial-value" id="dialVerticalVal">0.50</div>
+                <input type="range" id="dialVertical" min="0" max="100" value="50"
+                       oninput="setDial('vertical', this.value / 100)">
+            </div>
+            <div class="dial">
+                <div class="dial-name">I·horizontal — Ratio Complexity</div>
+                <div class="dial-value" id="dialHorizontalVal">0.30</div>
+                <input type="range" id="dialHorizontal" min="0" max="100" value="30"
+                       oninput="setDial('horizontal', this.value / 100)">
+            </div>
+            <div class="dial">
+                <div class="dial-name">I·spectral — Brightness</div>
+                <div class="dial-value" id="dialSpectralVal">0.50</div>
+                <input type="range" id="dialSpectral" min="0" max="100" value="50"
+                       oninput="setDial('spectral', this.value / 100)">
+            </div>
+        </div>
+
+        <!-- Keyboard -->
+        <div class="keyboard-container">
+            <div class="keyboard-label">Keyboard (click or use keys A-L)</div>
+            <div class="keyboard" id="keyboard">
+                <!-- Keys generated by JS -->
+            </div>
+        </div>
+
+        <!-- Info panel -->
+        <div class="info">
+            <div class="info-card">
+                <div class="info-label">Partials</div>
+                <div class="info-value" id="infoPartials">8</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Consonance</div>
+                <div class="info-value" id="infoConsonance">0.85</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">Voices</div>
+                <div class="info-value" id="infoVoices">0 / 4</div>
+            </div>
+            <div class="info-card">
+                <div class="info-label">CPU</div>
+                <div class="info-value" id="infoCpu">—</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="lattice.js"></script>
+    <script>
+        // ========================================================================
+        // State
+        // ========================================================================
+        let oscillator = null;
+        let analyser = null;
+        let audioCtx = null;
+        let running = false;
+        let activeKeys = new Set();
+
+        // Note frequencies (C4 to C5, chromatic)
+        const NOTES = [
+            { name: 'C',  freq: 261.63, type: 'white', key: 'a' },
+            { name: 'C#', freq: 277.18, type: 'black', key: 'w' },
+            { name: 'D',  freq: 293.66, type: 'white', key: 's' },
+            { name: 'D#', freq: 311.13, type: 'black', key: 'e' },
+            { name: 'E',  freq: 329.63, type: 'white', key: 'd' },
+            { name: 'F',  freq: 349.23, type: 'white', key: 'f' },
+            { name: 'F#', freq: 369.99, type: 'black', key: 't' },
+            { name: 'G',  freq: 392.00, type: 'white', key: 'g' },
+            { name: 'G#', freq: 415.30, type: 'black', key: 'y' },
+            { name: 'A',  freq: 440.00, type: 'white', key: 'h' },
+            { name: 'A#', freq: 466.16, type: 'black', key: 'u' },
+            { name: 'B',  freq: 493.88, type: 'white', key: 'j' },
+            { name: 'C',  freq: 523.25, type: 'white', key: 'k' },
+        ];
+
+        // ========================================================================
+        // Build keyboard
+        // ========================================================================
+        function buildKeyboard() {
+            const kb = document.getElementById('keyboard');
+            NOTES.forEach((note, i) => {
+                const el = document.createElement('div');
+                el.className = `key ${note.type}`;
+                el.innerHTML = `<span>${note.key.toUpperCase()}</span>`;
+                el.dataset.freq = note.freq;
+                el.dataset.index = i;
+
+                // Mouse events
+                el.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    noteOn(i);
+                });
+                el.addEventListener('mouseup', () => noteOff(i));
+                el.addEventListener('mouseleave', () => noteOff(i));
+
+                // Touch events
+                el.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    noteOn(i);
+                });
+                el.addEventListener('touchend', () => noteOff(i));
+
+                kb.appendChild(el);
+            });
+        }
+
+        function noteOn(index) {
+            if (!running) return;
+            if (activeKeys.has(index)) return;
+            activeKeys.add(index);
+
+            const note = NOTES[index];
+            const keyEl = document.querySelectorAll('.key')[index];
+            if (keyEl) keyEl.classList.add('active');
+
+            oscillator.noteOn(note.freq);
+            updateVoices();
+        }
+
+        function noteOff(index) {
+            if (!activeKeys.has(index)) return;
+            activeKeys.delete(index);
+
+            const note = NOTES[index];
+            const keyEl = document.querySelectorAll('.key')[index];
+            if (keyEl) keyEl.classList.remove('active');
+
+            oscillator.noteOff(note.freq);
+            updateVoices();
+        }
+
+        // ========================================================================
+        // Keyboard shortcuts
+        // ========================================================================
+        const KEY_MAP = {};
+        NOTES.forEach((n, i) => { KEY_MAP[n.key] = i; });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.repeat) return;
+            const idx = KEY_MAP[e.key.toLowerCase()];
+            if (idx !== undefined) noteOn(idx);
+        });
+
+        document.addEventListener('keyup', (e) => {
+            const idx = KEY_MAP[e.key.toLowerCase()];
+            if (idx !== undefined) noteOff(idx);
+        });
+
+        // ========================================================================
+        // Dial control
+        // ========================================================================
+        function setDial(name, value) {
+            document.getElementById(`dial${name.charAt(0).toUpperCase() + name.slice(1)}Val`).textContent = value.toFixed(2);
+
+            if (running) {
+                oscillator.setDial(name, value);
+            }
+
+            updateInfo();
+        }
+
+        // ========================================================================
+        // Info display
+        // ========================================================================
+        function updateInfo() {
+            const vert = parseInt(document.getElementById('dialVertical').value) / 100;
+            const partials = 1 + Math.round(vert * 15);
+            document.getElementById('infoPartials').textContent = partials;
+
+            // Consonance estimate (lower complexity = more consonant)
+            const horiz = parseInt(document.getElementById('dialHorizontal').value) / 100;
+            const consonance = (1 - horiz * 0.6) * (1 - vert * 0.3);
+            document.getElementById('infoConsonance').textContent = consonance.toFixed(2);
+        }
+
+        function updateVoices() {
+            document.getElementById('infoVoices').textContent = `${activeKeys.size} / 4`;
+        }
+
+        // ========================================================================
+        // Waveform display
+        // ========================================================================
+        function drawWaveform() {
+            if (!running || !analyser) {
+                requestAnimationFrame(drawWaveform);
+                return;
+            }
+
+            const canvas = document.getElementById('waveform');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteTimeDomainData(dataArray);
+
+            // Clear
+            ctx.fillStyle = '#0d0d14';
+            ctx.fillRect(0, 0, width, height);
+
+            // Grid lines
+            ctx.strokeStyle = '#151520';
+            ctx.lineWidth = 1;
+            for (let y = 0; y < height; y += 30) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Waveform
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            ctx.shadowColor = 'rgba(0,255,136,0.3)';
+            ctx.shadowBlur = 5;
+            ctx.beginPath();
+
+            const sliceWidth = width / bufferLength;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                const v = dataArray[i] / 128.0;
+                const y = (v * height) / 2;
+
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+
+                x += sliceWidth;
+            }
+
+            ctx.lineTo(width, height / 2);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Center line
+            ctx.strokeStyle = '#1a1a2e';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, height / 2);
+            ctx.lineTo(width, height / 2);
+            ctx.stroke();
+
+            requestAnimationFrame(drawWaveform);
+        }
+
+        // ========================================================================
+        // Engine start
+        // ========================================================================
+        async function startEngine() {
+            const btn = document.getElementById('startBtn');
+            const status = document.getElementById('status');
+
+            btn.disabled = true;
+            status.textContent = 'Loading WASM module...';
+
+            try {
+                oscillator = new LatticeOscillator(4, 16, 44100);
+                await oscillator.init();
+
+                audioCtx = oscillator.audioCtx;
+
+                // Create analyser for waveform display
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 2048;
+
+                // Reconnect: worklet → analyser → destination
+                oscillator.workletNode.disconnect();
+                oscillator.workletNode.connect(analyser);
+                analyser.connect(audioCtx.destination);
+
+                running = true;
+                status.textContent = 'Engine running — play the keyboard!';
+                status.style.color = '#00ff88';
+                btn.textContent = '● Running';
+                btn.style.borderColor = '#00ff88';
+
+                // Set initial dial values
+                oscillator.setDial('vertical', 0.5);
+                oscillator.setDial('horizontal', 0.3);
+                oscillator.setDial('spectral', 0.5);
+
+                updateInfo();
+                drawWaveform();
+
+            } catch (err) {
+                status.textContent = `Error: ${err.message}`;
+                status.style.color = '#ff4444';
+                btn.disabled = false;
+                btn.textContent = '▶ Retry';
+                console.error(err);
+            }
+        }
+
+        // ========================================================================
+        // Init
+        // ========================================================================
+        buildKeyboard();
+        drawWaveform();
+    </script>
+</body>
+</html>
