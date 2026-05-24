@@ -1,6 +1,6 @@
 {
   "Rust": {
-    "render_time_ms": 3.5,
+    "render_time_ms": 3.6,
     "spectral_centroid_Hz": 495.1,
     "top_peaks": [
       [
@@ -28,7 +28,7 @@
     "style_notes": "Zero-allocation, hard envelope, minimal harmonics, no vibrato"
   },
   "Haskell": {
-    "render_time_ms": 12.5,
+    "render_time_ms": 21.2,
     "spectral_centroid_Hz": 402.3,
     "top_peaks": [
       [
@@ -56,35 +56,35 @@
     "style_notes": "Lazy harmonic evaluation, pure sines, cosine envelope, elegant decay"
   },
   "Python": {
-    "render_time_ms": 13.6,
-    "spectral_centroid_Hz": 873.3,
+    "render_time_ms": 10.2,
+    "spectral_centroid_Hz": 885.7,
     "top_peaks": [
       [
-        333.8,
-        6524.885742
+        527.6,
+        8664.094727
       ],
       [
-        527.6,
-        6458.26123
+        495.3,
+        8028.555176
+      ],
+      [
+        290.7,
+        7124.258789
       ],
       [
         441.4,
-        6177.052246
-      ],
-      [
-        344.5,
-        5842.69873
+        7014.376953
       ],
       [
         516.8,
-        5512.519043
+        6722.016602
       ]
     ],
     "audio_file": "exp3_python_style.wav",
     "style_notes": "Rich harmonics, slight randomness, expressive ADSR, generous sustain"
   },
   "C": {
-    "render_time_ms": 8112.5,
+    "render_time_ms": 8085.4,
     "spectral_centroid_Hz": 423.4,
     "top_peaks": [
       [
