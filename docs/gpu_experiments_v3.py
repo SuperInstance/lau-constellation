@@ -217,7 +217,7 @@ def experiment1():
     
     # Save JSON
     with open(OUTDIR / "exp1_scale_consonance.json", "w") as f:
-        json.dump(results, f, indent=2)
+        json.dump({k: float(v) if hasattr(v, "item") else v for k, v in results.items()}, f, indent=2, default=str)
     print(f"\n  ✅ Saved 27 WAV files + exp1_scale_consonance.json")
     return results
 
@@ -226,29 +226,36 @@ def experiment1():
 # ═══════════════════════════════════════════════════════════════════
 
 def euclidean_rhythm(k, n):
-    """Björklund's algorithm for Euclidean rhythm E(k,n)."""
-    if k == 0 or k == n:
-        return [1]*k if k == n else [0]*n
-    if k > n:
-        k = k % n
+    """Björklund's algorithm for Euclidean rhythm E(k,n).
+    Distributes k onsets as evenly as possible among n steps."""
+    if k >= n:
+        return [1] * n
+    if k == 0:
+        return [0] * n
     
-    bucket = [[1] if i < k else [0] for i in range(n)]
-    while True:
-        n_groups = len(bucket)
-        n_ones = sum(1 for g in bucket if g[0] == 1)
-        if n_ones <= 1:
-            break
-        # Pair first n_ones groups with last n_ones groups
-        new_bucket = []
-        for i in range(min(n_ones, n_groups - n_ones)):
-            new_bucket.append(bucket[i] + bucket[-(i+1)])
-        for i in range(n_ones, n_groups - n_ones):
-            new_bucket.append(bucket[i])
-        if len(new_bucket) == n_groups:
-            break
-        bucket = new_bucket
+    # Start with k ones and (n-k) zeros
+    ones = [[1] for _ in range(k)]
+    zeros = [[0] for _ in range(n - k)]
     
-    return [x for group in bucket for x in group]
+    # Repeatedly concatenate the shorter group onto the longer
+    while len(ones) > 1 and len(zeros) > 0:
+        n_concat = min(len(ones), len(zeros))
+        new_ones = []
+        for i in range(n_concat):
+            new_ones.append(ones[i] + zeros[i])
+        # Remaining elements
+        remaining = ones[n_concat:] + zeros[n_concat:]
+        ones = new_ones
+        zeros = remaining
+    
+    # Flatten
+    result = []
+    for group in ones:
+        result.extend(group)
+    for group in zeros:
+        result.extend(group)
+    
+    return result
 
 RHYTHMS = {
     "Aksak (2+2+2+3)": {
@@ -317,7 +324,7 @@ def compute_syncopation(pattern):
             next_i = (i + 1) % n
             if pat[next_i] == 0 and weights[next_i] > weights[i]:
                 sync += weights[next_i] - weights[i]
-    return sync
+    return float(sync)
 
 def onset_entropy(pattern):
     """Shannon entropy of onset positions."""
@@ -374,7 +381,9 @@ def experiment2():
         
         # Metrics
         sync = compute_syncopation(pattern)
+        sync = float(sync)
         ent = onset_entropy(pattern)
+        ent = float(ent)
         
         # Euclidean rhythm for comparison
         euc = euclidean_rhythm(k, n) if k <= n else [1]*n
@@ -412,7 +421,7 @@ def experiment2():
             "pattern": pattern,
             "n_steps": n,
             "n_onsets": k,
-            "syncopation_index": round(sync, 4),
+            "syncopation_index": round(float(sync), 4),
             "onset_entropy": round(ent, 4),
             "euclidean_similarity": round(1.0 - euc_dist, 4),
             "euclidean_rhythm": euc,
@@ -425,8 +434,8 @@ def experiment2():
     for k, n in [(3,8), (4,12), (5,8), (5,16), (7,12), (7,16), (9,16)]:
         euc = euclidean_rhythm(k, n)
         euc_name = f"Euclidean E({k},{n})"
-        sync = compute_syncopation(euc)
-        ent = onset_entropy(euc)
+        sync = float(compute_syncopation(euc))
+        ent = float(onset_entropy(euc))
         results[euc_name] = {
             "culture": "Mathematical",
             "time_signature": f"{n}/8" if n % 8 == 0 else f"{n}/4",
@@ -441,7 +450,7 @@ def experiment2():
         print(f"  📐 {euc_name}: sync={sync:.3f}  entropy={ent:.3f}")
     
     with open(OUTDIR / "exp2_rhythm_analysis.json", "w") as f:
-        json.dump(results, f, indent=2)
+        json.dump({k: float(v) if hasattr(v, "item") else v for k, v in results.items()}, f, indent=2, default=str)
     print(f"\n  ✅ Saved rhythm WAV files + exp2_rhythm_analysis.json")
     return results
 
@@ -627,7 +636,7 @@ def experiment3():
         print(f"     Rendered in {elapsed*1000:.0f}ms  centroid={centroid:.0f}Hz")
     
     with open(OUTDIR / "exp3_language_styles.json", "w") as f:
-        json.dump(results, f, indent=2)
+        json.dump({k: float(v) if hasattr(v, "item") else v for k, v in results.items()}, f, indent=2, default=str)
     print(f"\n  ✅ Saved 4 WAV files + exp3_language_styles.json")
     return results
 
@@ -980,7 +989,7 @@ def experiment5():
         print(f"  {name:<25} {r['n_notes']:>5} {r['consonance']['mean']:>10.4f} {r['consonance']['I_vert']:>8.4f} {vs:>10}")
     
     with open(OUTDIR / "exp5_microtonal_analysis.json", "w") as f:
-        json.dump(results, f, indent=2)
+        json.dump({k: float(v) if hasattr(v, "item") else v for k, v in results.items()}, f, indent=2, default=str)
     print(f"\n  ✅ Saved microtonal WAV files + exp5_microtonal_analysis.json")
     return results
 
