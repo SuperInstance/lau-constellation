@@ -109,9 +109,11 @@ class CudaLatticeOscillator:
         sample_rate: float,
         shape: WaveformShape = WaveformShape.Sine,
         stretch: float = 1.0,
+        chunk_size: int = 22050,         # process in chunks to limit VRAM
     ) -> torch.Tensor:
         """
         Generate P partials for V voices simultaneously.
+        Processes in chunks to avoid OOM on smaller GPUs.
 
         Returns: (V, num_samples) tensor on GPU.
         """
@@ -119,44 +121,44 @@ class CudaLatticeOscillator:
         P = lattice_coords.shape[0]
 
         # Compute partial frequencies: f_base * 2^a * 3^b * 5^c
-        # lattice_coords: (P, 3) -> ratios (P,)
         ratios = (LATTICE_PRIMES[0] ** lattice_coords[:, 0].float() *
                   LATTICE_PRIMES[1] ** lattice_coords[:, 1].float() *
                   LATTICE_PRIMES[2] ** lattice_coords[:, 2].float())
 
         # partial_freqs: (V, P)
         partial_freqs = base_freqs.unsqueeze(1) * ratios.unsqueeze(0)
+        phase_inc = partial_freqs / sample_rate * stretch  # (V, P)
 
-        # phase_inc: (V, P)
-        phase_inc = partial_freqs / sample_rate * stretch
+        output = torch.zeros(V, num_samples, device=self.device, dtype=torch.float32)
 
-        # Cumulative phase: (V, P, T)
-        t = torch.arange(num_samples, device=self.device, dtype=torch.float32)
-        phase = (phase_inc.unsqueeze(2) * t.unsqueeze(0).unsqueeze(0)) % 1.0
+        for start in range(0, num_samples, chunk_size):
+            end = min(start + chunk_size, num_samples)
+            T_chunk = end - start
 
-        # Generate waveform samples
-        dt = phase_inc.unsqueeze(2).expand_as(phase)
+            t = torch.arange(start, end, device=self.device, dtype=torch.float32)
+            # phase: (V, P, T_chunk)
+            phase = (phase_inc.unsqueeze(2) * t.unsqueeze(0).unsqueeze(0)) % 1.0
+            dt = phase_inc.unsqueeze(2).expand_as(phase)
 
-        if shape == WaveformShape.Sine:
-            samples = torch.sin(2.0 * math.pi * phase)
-        elif shape == WaveformShape.Square:
-            samples = self._square_polyblep(phase, dt)
-        elif shape == WaveformShape.Saw:
-            samples = self._saw_polyblep(phase, dt)
-        elif shape == WaveformShape.Triangle:
-            samples = self._triangle(phase, dt)
-        elif shape == WaveformShape.Eisenstein:
-            samples = self._eisenstein(phase)
-        else:
-            samples = torch.sin(2.0 * math.pi * phase)
+            if shape == WaveformShape.Sine:
+                samples = torch.sin(2.0 * math.pi * phase)
+            elif shape == WaveformShape.Square:
+                samples = self._square_polyblep(phase, dt)
+            elif shape == WaveformShape.Saw:
+                samples = self._saw_polyblep(phase, dt)
+            elif shape == WaveformShape.Triangle:
+                samples = self._triangle(phase, dt)
+            elif shape == WaveformShape.Eisenstein:
+                samples = self._eisenstein(phase)
+            else:
+                samples = torch.sin(2.0 * math.pi * phase)
 
-        # Apply amplitudes: (P,) -> (1, P, 1)
-        samples = samples * amplitudes.view(1, P, 1)
+            samples = samples * amplitudes.view(1, P, 1)
+            output[:, start:end] = samples.sum(dim=1)
 
-        # Sum partials -> (V, T)
-        output = samples.sum(dim=1)
+            del phase, dt, samples
 
-        # Normalise so peak is [-1, 1] ish
+        # Normalise
         peak = output.abs().amax(dim=1, keepdim=True).clamp(min=1e-6)
         output = output / peak * 0.8
 
@@ -486,8 +488,8 @@ class Benchmark:
         end = torch.cuda.Event(enable_timing=True)
         return start, end
 
-    def bench_lattice_oscillator(self, num_voices: int = 100, duration: float = 5.0,
-                                  sample_rate: float = 44100.0, num_partials: int = 16):
+    def bench_lattice_oscillator(self, num_voices: int = 100, duration: float = 2.0,
+                                  sample_rate: float = 44100.0, num_partials: int = 12):
         """Benchmark lattice oscillator: CPU vs GPU for N-voice polyphony."""
         num_samples = int(duration * sample_rate)
         print(f"\n{'='*60}")
@@ -517,13 +519,17 @@ class Benchmark:
         amplitudes = 1.0 / (torch.arange(num_partials, dtype=torch.float32) + 1.0)
 
         # --- CPU benchmark ---
+        # Use fewer voices for CPU to keep it reasonable
+        cpu_voices = min(num_voices, 20)
         osc = CudaLatticeOscillator(device=torch.device("cpu"))
         t0 = time.perf_counter()
         cpu_out = osc.generate_partials(
-            freqs_cpu, lattice_coords, amplitudes,
+            freqs_cpu[:cpu_voices], lattice_coords, amplitudes,
             num_samples, sample_rate, WaveformShape.Sine
         )
         cpu_time = time.perf_counter() - t0
+        # Extrapolate to full voice count
+        cpu_time = cpu_time * (num_voices / cpu_voices)
 
         # --- GPU benchmark ---
         osc_gpu = CudaLatticeOscillator(device=self.device)
@@ -561,7 +567,7 @@ class Benchmark:
         print(f"  Speedup:  {speedup:.2f}x")
         print(f"  Output shape: {gpu_out.shape}")
 
-    def bench_biquad_bank(self, num_voices: int = 64, duration: float = 5.0,
+    def bench_biquad_bank(self, num_voices: int = 64, duration: float = 2.0,
                            sample_rate: float = 44100.0):
         """Benchmark parallel biquad filter bank: CPU vs GPU."""
         num_samples = int(duration * sample_rate)

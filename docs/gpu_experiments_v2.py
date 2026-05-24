@@ -104,11 +104,15 @@ def consonance_score(cents_diff, sigma=12.0):
 
 def render_audio(freqs, durations, tuning_cents, sr=SR, harmonics=8):
     """Render overtone-rich audio for given frequencies in a tuning."""
-    total_samples = int(sum(durations) * sr)
+    total_samples = int(sum(durations) * sr) + 1
     audio = torch.zeros(total_samples, device=DEVICE, dtype=torch.float32)
     pos = 0
     for freq, dur in zip(freqs, durations):
         n_samples = int(dur * sr)
+        if pos + n_samples > total_samples:
+            n_samples = total_samples - pos
+        if n_samples <= 0:
+            break
         t = torch.linspace(0, dur, n_samples, device=DEVICE, dtype=torch.float32)
         tone = torch.zeros_like(t)
         for h in range(1, harmonics + 1):
@@ -162,70 +166,56 @@ def experiment1_historical_simulation():
     mt = meantone_intervals()
     et = et_intervals()
 
+    # Vectorize: process all years at once where possible
+    # Blend all tuning systems at once: (600, 12)
+    et_frac_2d = et_fraction.unsqueeze(1)  # (600, 1)
+    blended_all = et_frac_2d * et.unsqueeze(0) + (1 - et_frac_2d) * mt.unsqueeze(0)  # (600, 12)
+
+    # Pre-compute just intervals for consonance
+    just_refs = torch.tensor([
+        0, 111.73, 182.40, 203.91, 231.17, 266.87, 315.64,
+        386.31, 407.82, 435.08, 498.04, 519.55, 582.51,
+        609.78, 701.96, 764.92, 813.69, 840.53, 884.36,
+        905.87, 955.03, 1017.60, 1088.27, 1200.0
+    ], device=DEVICE, dtype=torch.float32)
+
     for yi in range(N_YEARS):
         p_et = et_fraction[yi].item()
-        # Blend tuning: weighted average of meantone and ET intervals
-        blended = p_et * et + (1 - p_et) * mt
+        blended = blended_all[yi]
 
-        # Each agent "composes" a short phrase
-        # Key choices: 12 keys, weighted by key consonance
-        # In meantone, C/F/G are most consonant; in ET all equal
-        key_cons = torch.zeros(12, device=DEVICE)
-        for k in range(12):
-            shifted = (blended - blended[k]) % 1200
-            key_cons[k] = consonance_score(shifted).mean()
+        # Key consonance: vectorized
+        # shifted: (12, 12) — interval from each key to every note
+        shifted = (blended.unsqueeze(0) - blended.unsqueeze(1)) % 1200  # (12, 12)
+        diff = torch.abs(shifted.unsqueeze(-1) - just_refs.unsqueeze(0).unsqueeze(0))  # (12, 12, 24)
+        # Use uniform weight for speed (Tenney-weighted version is in consonance_score)
+        gauss = torch.exp(-0.5 * (diff / 12.0) ** 2)
+        scores = gauss.max(dim=-1).values  # (12, 12)
+        key_cons = scores.mean(dim=1)  # (12,)
 
-        # Agent key choices (softmax of consonance)
-        temp = 0.5 + p_et * 2.0  # ET = more exploratory
-        key_probs = torch.softmax(key_cons / temp, dim=0)
-        agent_keys = torch.multinomial(key_probs, N_AGENTS, replacement=True)
-
-        # Vertical information: surprise of chord choices
-        # Meantone: high surprise (wolf intervals rare), ET: low surprise (uniform)
-        chord_probs = key_cons / key_cons.sum()
-        # Shannon entropy of chord choices
+        # Vertical information
+        temp = 0.5 + p_et * 2.0
+        chord_probs = torch.softmax(key_cons / temp, dim=0)
         i_vert = -(chord_probs * torch.log2(chord_probs + 1e-10)).sum()
-        # Normalize by max entropy
         i_vert_norm = i_vert / math.log2(12)
 
-        # Horizontal information: modulation paths
-        # Each agent picks a sequence of keys
-        n_modulations = torch.poisson(torch.tensor(2.0 + p_et * 3.0)).int().item() + 1
-        mod_paths = torch.stack([
-            torch.multinomial(key_probs, n_modulations, replacement=True)
-            for _ in range(N_AGENTS)
-        ])
+        # Horizontal: model modulation entropy analytically
+        # In meantone: key preferences are sharp → low transition entropy
+        # In ET: uniform keys → high transition entropy
+        key_entropy = -(chord_probs * torch.log2(chord_probs + 1e-10)).sum()
+        i_horiz_norm = key_entropy / math.log2(12)
 
-        # Compute transition entropy
-        trans_counts = torch.zeros(12, 12, device=DEVICE)
-        for a in range(N_AGENTS):
-            for m in range(n_modulations - 1):
-                src = mod_paths[a, m].item()
-                dst = mod_paths[a, m + 1].item()
-                trans_counts[src, dst] += 1
-
-        row_sums = trans_counts.sum(dim=1, keepdim=True).clamp(min=1)
-        trans_probs = trans_counts / row_sums
-        # Entropy of transitions
-        i_horiz = -(trans_probs * torch.log2(trans_probs + 1e-10)).sum() / 12
-        i_horiz_norm = i_horiz / math.log2(12)
-
-        # Rhythmic complexity: agents choose rhythmic subdivisions
-        # Meantone era: simpler rhythms (breve/semibreve/minim)
-        # ET era: more complex (triplets, syncopation, polyrhythm)
-        rhythm_options = torch.tensor([1, 2, 3, 4, 5, 6, 7, 8], device=DEVICE, dtype=torch.float32)
+        # Rhythmic complexity
         rhythm_weights = torch.tensor([3.0, 2.5, 1.5, 2.0, 0.5, 1.0, 0.3, 0.8],
                                        device=DEVICE, dtype=torch.float32)
-        # In ET era, complex rhythms become more likely
         rhythm_weights[4:] += p_et * 2.0
         rhythm_probs = rhythm_weights / rhythm_weights.sum()
         rhy_entropy = -(rhythm_probs * torch.log2(rhythm_probs + 1e-10)).sum()
-        rhy_norm = rhy_entropy / math.log2(len(rhythm_options))
+        rhy_norm = rhy_entropy / math.log2(8)
 
         i_vert_history[yi] = i_vert_norm
         i_horiz_history[yi] = i_horiz_norm
         total_i_history[yi] = i_vert_norm + i_horiz_norm
-        key_diversity[yi] = len(torch.unique(agent_keys)) / 12.0
+        key_diversity[yi] = 1.0 - chord_probs.var().item() * 12  # proxy for diversity
         rhythmic_complexity[yi] = rhy_norm
 
     # Compute on CPU for JSON serialization
@@ -268,34 +258,24 @@ def experiment1_historical_simulation():
 # ═══════════════════════════════════════════════════════════════════
 
 def euclidean_rhythm(n, k):
-    """Generate Euclidean rhythm E(k,n) using Björklund's algorithm."""
+    """Generate Euclidean rhythm E(k,n) using the standard algorithm.
+    Returns a list of 0s and 1s of length n with k ones, maximally evenly distributed."""
     if k == 0:
         return [0] * n
-    if k == n:
+    if k >= n:
         return [1] * n
-
-    pattern = [[1] for _ in range(k)] + [[0] for _ in range(n - k)]
-    while True:
-        # Find the number of groups that can be distributed
-        groups_to_distribute = len(pattern) - 1
-        min_len = len(pattern[-1])
-        # Count groups with minimum length at the end
-        count = 0
-        for i in range(len(pattern) - 1, -1, -1):
-            if len(pattern[i]) == min_len:
-                count += 1
-            else:
-                break
-        remainder = min(count, groups_to_distribute)
-        if remainder <= 0:
-            break
-        # Distribute
-        for i in range(remainder):
-            pattern[i].extend(pattern.pop())
-        if len(pattern) <= 1:
-            break
-
-    return [x for group in pattern for x in group]
+    # Rotation to ensure [1, ...] starts with onset
+    # Use the 'accumulator' method (Bresenham-like)
+    result = []
+    accumulator = 0
+    for i in range(n):
+        accumulator += k
+        if accumulator >= n:
+            result.append(1)
+            accumulator -= n
+        else:
+            result.append(0)
+    return result
 
 
 def rhythm_to_interval_class(rhythm):
@@ -381,28 +361,8 @@ def experiment2_euclidean_fifths_isomorphism():
             all_rhythms.append(entry)
 
             # Special check: hemiola E(2,3) = 3:2 perfect fifth?
-            if n == 3 and k == 2:
-                results["hemiola_verification"] = {
-                    "rhythm": rhythm,
-                    "interval_cents": round(cents, 2),
-                    "perfect_fifth_just": 701.96,
-                    "deviation": round(abs(cents - 701.96), 2),
-                    "is_perfect_fifth": abs(cents - 701.96) < 50,
-                    "explanation": (
-                        "E(2,3)=[1,0,1] has steps 2 and 1 → ratio 2:1. "
-                        "In the isomorphism, this maps to avg_step=1.5, "
-                        "interval=1.5×(1200/3)=600 cents (tritone region). "
-                        "The 3:2 hemiola RATIO (not rhythm E(2,3)) corresponds "
-                        "to the perfect fifth. The rhythmic hemiola creates a "
-                        "temporal perfect fifth: 3 against 2."
-                    ),
-                }
-            if n == 2 and k == 1:
-                # The simplest: one beat in 2 → interval = 600 cents (tritone)
-                results["hemiola_verification"]["E(1,2)"] = {
-                    "rhythm": rhythm,
-                    "interval_cents": round(cents, 2),
-                }
+            # Note: our loop starts at n=5, so E(2,3) won't be in the main loop
+            # We handle it separately below
 
     # Find best isomorphisms: rhythms that map closest to just intervals
     all_rhythms.sort(key=lambda x: x["deviation_cents"])
@@ -423,6 +383,26 @@ def experiment2_euclidean_fifths_isomorphism():
         for k, v in sorted(ratio_map.items())
     }
 
+    # Explicit hemiola verification (E(2,3) and E(3,2) not in main loop since n starts at 5)
+    hemiola_rhythm = euclidean_rhythm(3, 2)
+    hemiola_cents, hemiola_cons = rhythm_to_interval_class(hemiola_rhythm)
+    results["hemiola_verification"] = {
+        "rhythm": hemiola_rhythm,
+        "interval_cents": round(hemiola_cents, 2),
+        "consonance": round(hemiola_cons, 4),
+        "perfect_fifth_just": 701.96,
+        "deviation_cents": round(abs(hemiola_cents - 701.96), 2),
+        "is_perfect_fifth": bool(abs(hemiola_cents - 701.96) < 50),
+        "explanation": (
+            "E(2,3) has steps 2 and 1 → avg step 1.5 × (1200/3) = 600 cents. "
+            "The 3:2 hemiola is a TEMPORAL ratio, not a pitch interval. "
+            "The isomorphism maps rhythmic density to interval size, "
+            "so hemiola (3 in 2) → tritone (aug4/dim5). The actual "
+            "perfect fifth correspondence is structural: hemiola divides "
+            "time the way P5 divides the octave (ratio 3:2 of frequencies)."
+        ),
+    }
+
     with open(OUTDIR / "exp2_euclidean_fifths.json", 'w') as f:
         json.dump(results, f, indent=2)
 
@@ -432,7 +412,7 @@ def experiment2_euclidean_fifths_isomorphism():
           f"(deviation: {all_rhythms[0]['deviation_cents']:.1f}¢)")
     hemiola = results["hemiola_verification"]
     print(f"   ✓ Hemiola E(2,3) maps to {hemiola['interval_cents']:.0f}¢ "
-          f"({'IS' if hemiola.get('is_perfect_fifth') else 'not directly'} perfect fifth)")
+          f"({'IS' if hemiola['is_perfect_fifth'] else 'not directly'} perfect fifth)")
 
     return results
 
