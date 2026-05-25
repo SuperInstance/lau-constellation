@@ -16,7 +16,7 @@ program entanglement_consonance
   double precision :: delta_val, omega_r
   double precision :: c10_re, c10_im, c01_re, c01_im
   double precision :: p10, p01, S, tenney, cents_val
-  character(len=10) :: names(N_INT)
+  character(len=8) :: names(N_INT)
   double precision :: ratios(N_INT)
   integer :: k
 

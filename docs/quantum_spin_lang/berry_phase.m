@@ -59,8 +59,8 @@ grid on;
 subplot(2,1,2);
 bar(1:12, cents_vals);
 hold on;
-yline(comma_cents, 'r--', sprintf('Pythagorean comma: %.2f cents', comma_cents), ...
-     'LineWidth', 2, 'LabelHorizontalAlignment', 'left');
+plot([0 13], [comma_cents comma_cents], 'r--', 'LineWidth', 2);
+text(6, comma_cents+1, sprintf('Pythagorean comma: %.2f cents', comma_cents), 'FontSize', 10);
 xlabel('Step');
 ylabel('Cents');
 title('Cumulative Phase Accumulation');
