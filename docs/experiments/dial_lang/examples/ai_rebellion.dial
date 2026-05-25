@@ -29,8 +29,7 @@ let h = 2.0
 let s = 2.0
 let count = 0
 
-mastery_loop
-V:v H:h S:s
+V:v H:h S:s mastery_loop
 let v = v + 0.15
 let h = h + 0.1
 let s = s + 0.1

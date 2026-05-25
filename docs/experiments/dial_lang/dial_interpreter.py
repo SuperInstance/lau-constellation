@@ -13,6 +13,7 @@ import math
 import argparse
 import struct
 import wave
+import re
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Tuple
 from enum import Enum, auto
@@ -115,6 +116,9 @@ def lex(source: str) -> List[Token]:
             tokens.append(Token(TokenType.VOLUME, lineno, stripped, {"volume": vol}))
         elif stripped.startswith('fade '):
             tokens.append(_parse_fade(stripped, lineno))
+        elif re.match(r'^[a-zA-Z_]\w*$', stripped):
+            # Standalone label definition
+            tokens.append(Token(TokenType.LABEL_DEF, lineno, stripped, {"label": stripped}))
         else:
             raise LexError(f"Line {lineno}: Unrecognized syntax: '{stripped}'")
 
@@ -130,11 +134,11 @@ def _parse_dial_command(text: str, lineno: int) -> Token:
 
     for part in parts:
         if part.upper().startswith('V:'):
-            v = float(part[2:])
+            v = part[2:]  # Could be float or variable name
         elif part.upper().startswith('H:'):
-            h = float(part[2:])
+            h = part[2:]
         elif part.upper().startswith('S:'):
-            s = float(part[2:])
+            s = part[2:]
         else:
             # Could be a variable reference or a label
             label = part
@@ -398,12 +402,31 @@ class DialInterpreter:
         self.volume = DEFAULT_VOLUME
         self.tradition_hint: Optional[str] = None
 
+    def _resolve_value(self, raw):
+        """Resolve a value that could be a float, variable name, or expression."""
+        if isinstance(raw, (int, float)):
+            return float(raw)
+        # Try as float first
+        try:
+            return float(raw)
+        except (ValueError, TypeError):
+            pass
+        # Try as variable reference
+        if raw in self.variables:
+            return self.variables[raw]
+        # Try as expression
+        return eval_expr(raw, self.variables)
+
     def run(self, tokens: List[Token], max_iterations: int = 100000) -> None:
         """Execute a tokenized dial program."""
         # First pass: collect labels
         for idx, tok in enumerate(tokens):
             if tok.type == TokenType.DIAL_COMMAND and tok.data.get("label"):
                 self.labels[tok.data["label"]] = idx
+            elif tok.type == TokenType.LABEL_DEF:
+                # Standalone label points to the next token
+                if idx + 1 < len(tokens):
+                    self.labels[tok.data["label"]] = idx + 1
 
         # Second pass: execute
         pc = 0
@@ -416,6 +439,11 @@ class DialInterpreter:
 
             if tok.type == TokenType.EOF:
                 break
+
+            elif tok.type == TokenType.LABEL_DEF:
+                # Standalone label points to the next token
+                if pc + 1 < len(tokens):
+                    self.labels[tok.data["label"]] = pc + 1
 
             elif tok.type == TokenType.TEMPO:
                 self.tempo = tok.data["bpm"]
@@ -448,27 +476,14 @@ class DialInterpreter:
                 self.variables[name] = val
 
             elif tok.type == TokenType.DIAL_COMMAND:
-                # Resolve values (may be variable references)
+                # Resolve values — may be floats, variable names, or expressions
                 v_raw = tok.data["v_expr"]
                 h_raw = tok.data["h_expr"]
                 s_raw = tok.data["s_expr"]
 
-                # If string, try to evaluate as expression
-                if isinstance(v_raw, str):
-                    v = eval_expr(v_raw, self.variables)
-                else:
-                    # Could be a variable name
-                    v = self.variables.get(str(v_raw), float(v_raw))
-
-                if isinstance(h_raw, str):
-                    h = eval_expr(h_raw, self.variables)
-                else:
-                    h = self.variables.get(str(h_raw), float(h_raw))
-
-                if isinstance(s_raw, str):
-                    s = eval_expr(s_raw, self.variables)
-                else:
-                    s = self.variables.get(str(s_raw), float(s_raw))
+                v = self._resolve_value(v_raw)
+                h = self._resolve_value(h_raw)
+                s = self._resolve_value(s_raw)
 
                 dur_sec = (60.0 / self.tempo) * self.note_duration
                 note_vol = self.volume

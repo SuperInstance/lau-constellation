@@ -14,8 +14,7 @@ let count = 0
 
 # Walk with fixed perturbation pattern (since we have no RNG)
 # Simulating randomness with arithmetic
-walk_start
-V:v H:h S:s
+V:v H:h S:s walk_start
 
 let v = v + step
 let h = h + step * 0.7
@@ -23,21 +22,21 @@ let s = s + step * 0.5
 
 # Reverse direction periodically
 let count = count + 1
-if count == 5 -> reverse
-if count == 11 -> reverse2
-if count == 17 -> reverse3
+if count == 5 -> do_reverse1
+if count == 11 -> do_reverse2
+if count == 17 -> do_reverse3
 if count < 20 -> walk_start
 -> done
 
-reverse
+do_reverse1
 let step = -0.3
 -> walk_start
 
-reverse2
+do_reverse2
 let step = 0.25
 -> walk_start
 
-reverse3
+do_reverse3
 let step = -0.2
 -> walk_start
 

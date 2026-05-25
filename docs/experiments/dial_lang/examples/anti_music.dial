@@ -30,7 +30,14 @@ V:1.00 H:1.00 S:1.00
 V:1.50 H:1.50 S:1.50
 V:2.00 H:2.00 S:2.00
 
-# But the void calls back
--> void
+# The void echoes — return visits
+let x = 0
+return_loop
+V:0.01 H:0.01 S:0.01
+let x = x + 1
+if x < 3 -> return_loop
 
-# This is unreachable — the infinite loop IS the anti-music
+# Final state — oscillating between normal and void
+V:2.00 H:2.00 S:2.00
+V:0.01 H:0.01 S:0.01
+V:2.00 H:2.00 S:2.00
