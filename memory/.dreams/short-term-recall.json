@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T08:27:37.458Z",
+  "updatedAt": "2026-05-28T02:38:57.251Z",
   "entries": {
     "memory:memory/2026-05-11.md:163:200": {
       "key": "memory:memory/2026-05-11.md:163:200",
@@ -5212,19 +5212,21 @@
       "endLine": 163,
       "source": "memory",
       "snippet": "- ASSEMBLY-FIRST-SYNTH-DESIGN.md (39KB): Everything-is-ε, 64 voices in 54ns - CHINESE-MUSIC-CONSTRAINT-THEORY.md (41KB): Wǔxíng = Laman-rigid, liúbái constrains absence - INDIAN-ARABIC-CONSTRAINT-THEORY.md (51KB): Raga = constraint program, maqam sayr = Hamiltonian path - SOUND-PARAMETER-ATLAS.md (45KB): 85 dials, 10 new paradigms - SIGNAL-SUBSTRATE.md: Constraint = Signal = Music at every scale, Fractal Music Theorem - CONSTRAINT-SUBSTRATE-DESIGN.md (40KB): API contract, math specs, 15-language implementation plan ### Test Status - **688+ tests** across 11+ repos, **zero failures** - constraint-theory-core 83, counterpoint-engine 109, groove-analyzer 11, holonomy-harmony 94, spline-midi-sm",
-      "recallCount": 2,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1.07822241736303,
+      "totalScore": 1.4779005612219396,
       "maxScore": 0.6968878592337193,
       "firstRecalledAt": "2026-05-23T06:11:52.056Z",
-      "lastRecalledAt": "2026-05-23T06:11:52.290Z",
+      "lastRecalledAt": "2026-05-26T20:43:42.755Z",
       "queryHashes": [
         "f15460aae4bf",
-        "e25ed8886c61"
+        "e25ed8886c61",
+        "48ceddae3676"
       ],
       "recallDays": [
-        "2026-05-22"
+        "2026-05-22",
+        "2026-05-26"
       ],
       "conceptTags": [
         "assembly-first-synth-design.md",
@@ -5400,20 +5402,22 @@
       "endLine": 50,
       "source": "memory",
       "snippet": "- [x] **Push sweep**: 125 repos processed, 7 pushed, 14 FF-rejects fixed, 47 archived - [x] **Unified research doc**: TENSOR-MIDI-UNIFIED-RESEARCH.md (904 lines, 16K words, 33 citations) - [x] **46 dirty repos committed** ### Key Numbers - Total repos on GitHub: 1,681+ - Repos pushed this session: 21 - Total doc lines written: ~5,000+ - Research papers: 6 standalone + 1 unified - Test results: 73/78 counterpoint, 11/11 groove, 83/83 constraint-theory-core ### Agent Teams Used - z.ai (glm-5.1): 10 subagents (docs × 5, push, ff-fix, cleanup, unified-research, extract) - kimi: ~8 background agents (counterpoint, groove, holonomy, spline, PLATO, CI/CD, etc.) - DeepSeek: 3 API calls (consciousn",
-      "recallCount": 2,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.7474949330091476,
+      "totalScore": 1.1247397780418396,
       "maxScore": 0.3883398294448852,
       "firstRecalledAt": "2026-05-23T06:11:52.290Z",
-      "lastRecalledAt": "2026-05-23T14:13:46.902Z",
+      "lastRecalledAt": "2026-05-27T14:28:08.339Z",
       "queryHashes": [
         "e25ed8886c61",
-        "8b539074605f"
+        "8b539074605f",
+        "09741fa7ba25"
       ],
       "recallDays": [
         "2026-05-22",
-        "2026-05-23"
+        "2026-05-23",
+        "2026-05-27"
       ],
       "conceptTags": [
         "ff-rejects",
@@ -6327,6 +6331,383 @@
         "three",
         "layer",
         "compiled"
+      ]
+    },
+    "memory:memory/2026-05-20.md:27:57": {
+      "key": "memory:memory/2026-05-20.md:27:57",
+      "path": "memory/2026-05-20.md",
+      "startLine": 27,
+      "endLine": 57,
+      "source": "memory",
+      "snippet": "### Round-by-round progression: | Package | R1 | R2 | R3 | R4 | R5 | R6 | Final | |---------|-----|-----|-----|-----|-----|-----|-------| | tensor-spline | 10 | 10 | 9 | 9 | 4* | **10** | ✅ 10/10 | | device-router | 9 | 9 | 9.5 | | | **10** | ✅ 10/10 | | eisenstein-embed | 7.5 | 8.2 | 7.8 | 7.5 | 8 | **10** | ✅ 10/10 | | triplet-miner | 8.3 | 8.8 | 8.5 | | | **10** | ✅ 10/10 | | plato-training | 5 | 8 | 8 | R4 fix | thread safety | **10** | ✅ 10/10 | | luciddreamer | 8.5 | in progress | | | | | R2 pending | *R5 tested stale PyPI version; R6 from source = 10/10 ### What got each to 10/10: - **device-router**: RLock on all state (detect, overview, lazy inits) - **eisenstein-embed**: Type an",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3938088923692703,
+      "maxScore": 0.3938088923692703,
+      "firstRecalledAt": "2026-05-26T17:48:51.290Z",
+      "lastRecalledAt": "2026-05-26T17:48:51.290Z",
+      "queryHashes": [
+        "135b9961fd55"
+      ],
+      "recallDays": [
+        "2026-05-26"
+      ],
+      "conceptTags": [
+        "router",
+        "round-by-round",
+        "tensor-spline",
+        "10/10",
+        "device-router",
+        "9.5",
+        "eisenstein-embed",
+        "7.5"
+      ]
+    },
+    "memory:memory/2026-05-25.md:162:185": {
+      "key": "memory:memory/2026-05-25.md:162:185",
+      "path": "memory/2026-05-25.md",
+      "startLine": 162,
+      "endLine": 185,
+      "source": "memory",
+      "snippet": "- Solution: procedural prompts, 5 repos max, separate style from task, no templates in prompts - Successful pattern: numbered steps, repetitive tasks, concrete examples - Failed pattern: CRITICAL STYLE GUIDE, 8+ repos, conditional logic, quality lectures - New agent pattern: 4/4 = 100% success vs old pattern 50% ### Final README Sweep Results - 88/100 repos now have 50+ line READMEs - Only 13 under 50 lines — 9 are empty stubs (no source), 4 are intentional (archived/personal) - Total repos touched this session: 70+ ### CI Fixes (waves 1-10 + direct fixes) **Waves 7-8 agent results (all successful):** - Wave 7: tensor-spline, penrose-memory, constraint-instrument, plato-mcp, plato-room-mus",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7706474155187606,
+      "maxScore": 0.3923786610364914,
+      "firstRecalledAt": "2026-05-26T17:48:51.290Z",
+      "lastRecalledAt": "2026-05-27T14:28:08.339Z",
+      "queryHashes": [
+        "135b9961fd55",
+        "09741fa7ba25"
+      ],
+      "recallDays": [
+        "2026-05-26",
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "4/4",
+        "88/100",
+        "archived/personal",
+        "1-10",
+        "7-8",
+        "tensor-spline",
+        "penrose-memory",
+        "constraint-instrument"
+      ]
+    },
+    "memory:memory/2026-05-23.md:836:872": {
+      "key": "memory:memory/2026-05-23.md:836:872",
+      "path": "memory/2026-05-23.md",
+      "startLine": 836,
+      "endLine": 872,
+      "source": "memory",
+      "snippet": "- 4 academic LaTeX papers in PAPERS/ - 342 Lean 4 definitions, 211 theorems - 3 web toys (Constraint Tarot, Code-as-Music, main site) ### Still TODO - [ ] Wire new physics modules (string_resonance, constraint_impedance) into conductor - [ ] Build actual audio output from string_resonance module - [ ] Build interactive band impedance matcher - [ ] Visual art experiment (5 primitives in non-music domain?) - [ ] Lorenz-driven creative system (ODE as compositional driver) - [ ] Academic submission — 4 papers ready - [ ] Play-along mode (AI listens + responds to live MIDI) - [ ] Real-time audio via FunDSP + CPAL (Rust) - [ ] VST plugin with cultural presets - [ ] Soliton detector for musical id",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.389925542473793,
+      "maxScore": 0.389925542473793,
+      "firstRecalledAt": "2026-05-26T17:48:51.290Z",
+      "lastRecalledAt": "2026-05-26T17:48:51.290Z",
+      "queryHashes": [
+        "135b9961fd55"
+      ],
+      "recallDays": [
+        "2026-05-26"
+      ],
+      "conceptTags": [
+        "code-as-music",
+        "string-resonance",
+        "constraint-impedance",
+        "non-music",
+        "lorenz-driven",
+        "play-along",
+        "real-time",
+        "academic"
+      ]
+    },
+    "memory:memory/2026-05-25.md:31:59": {
+      "key": "memory:memory/2026-05-25.md:31:59",
+      "path": "memory/2026-05-25.md",
+      "startLine": 31,
+      "endLine": 59,
+      "source": "memory",
+      "snippet": "- Failed pattern: CRITICAL STYLE GUIDE, 8+ repos, conditional logic, quality lectures - New agent pattern: 4/4 = 100% success vs old pattern 50% ### Final README Sweep Results - 88/100 repos now have 50+ line READMEs - Only 13 under 50 lines — 9 are empty stubs (no source), 4 are intentional (archived/personal) - Total repos touched this session: 60+ ### CI Fixes (wave 1-10 + direct) - flux-algebra: fixed setuptools build backend (success) - sunset-ecosystem: added cryptography + numpy, skip torch tests - cocapn-plato: now green - constraint-theory-web: npm install instead of npm ci - cocapn-cli: cargo fmt (old CI run) - flux-verify-api: cargo fmt (old CI run) - fleet-health-monitor: flaky",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7613268166780471,
+      "maxScore": 0.3835863411426544,
+      "firstRecalledAt": "2026-05-26T17:48:51.290Z",
+      "lastRecalledAt": "2026-05-27T14:28:08.339Z",
+      "queryHashes": [
+        "135b9961fd55",
+        "09741fa7ba25"
+      ],
+      "recallDays": [
+        "2026-05-26",
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "4/4",
+        "88/100",
+        "archived/personal",
+        "1-10",
+        "flux-algebra",
+        "sunset-ecosystem",
+        "cocapn-plato",
+        "constraint-theory-web"
+      ]
+    },
+    "memory:memory/2026-05-25.md:56:84": {
+      "key": "memory:memory/2026-05-25.md:56:84",
+      "path": "memory/2026-05-25.md",
+      "startLine": 56,
+      "endLine": 84,
+      "source": "memory",
+      "snippet": "- fleet-bottles: switched from hatchling to setuptools - triplet-miner: CI branch trigger fixed (master not main) - Wave 7: tensor-spline, penrose-memory, constraint-instrument, plato-mcp, plato-room-musician (pytest not found) - Wave 8: quality-gate-stream, constraint-substrate, swarm-rooms, fleet-murmur, flux-compiler-workspace - 18 CI re-runs triggered for repos with old failing runs - Latest scan: 52+ green, ~20 failing (many need deeper fixes) - New greens from this session: fleet-math-c, plato-engine, holonomy-harmony, triplet-miner, flux-check-js - Remaining hard failures: constraint-theory-core (test errors), sunset-ecosystem (big), flux-tensor-midi (huge), deadband-rs (large test su",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.38108559548854826,
+      "maxScore": 0.38108559548854826,
+      "firstRecalledAt": "2026-05-26T17:48:51.290Z",
+      "lastRecalledAt": "2026-05-26T17:48:51.290Z",
+      "queryHashes": [
+        "135b9961fd55"
+      ],
+      "recallDays": [
+        "2026-05-26"
+      ],
+      "conceptTags": [
+        "fleet-bottles",
+        "triplet-miner",
+        "tensor-spline",
+        "penrose-memory",
+        "constraint-instrument",
+        "plato-mcp",
+        "plato-room-musician",
+        "quality-gate-stream"
+      ]
+    },
+    "memory:memory/2026-05-23.md:294:313": {
+      "key": "memory:memory/2026-05-23.md:294:313",
+      "path": "memory/2026-05-23.md",
+      "startLine": 294,
+      "endLine": 313,
+      "source": "memory",
+      "snippet": "- **Constraint Tarot**: Live at superinstance.github.io/constraint-theory-web/constraint-tarot.html — 100 readings, animated flips - **Accessibility Paper**: 5 ladder levels, ~2800 words - **Annotated Score**: Spec + SVG prototype for constraint-overlay sheet music - **Flow Research**: 5 testable hypotheses, experimental design (100 musicians, 30 days) - **Syria-Oud Essay**: Maqam Hijaz × pedal steel, ~2000 words - **Class Plan**: 50-minute lesson, 4-week curriculum, printable worksheets - **Code-as-Music**: Live web toy, 7 language→genre cards with Web Audio - **Forest-Music**: Forest layers = orchestra (canopy=conductor, mycelium=sheet music) - **Genome-Music**: Genetic algorithm evolves c",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4301762759685516,
+      "maxScore": 0.4301762759685516,
+      "firstRecalledAt": "2026-05-26T20:43:42.755Z",
+      "lastRecalledAt": "2026-05-26T20:43:42.755Z",
+      "queryHashes": [
+        "48ceddae3676"
+      ],
+      "recallDays": [
+        "2026-05-26"
+      ],
+      "conceptTags": [
+        "constraint-overlay",
+        "syria-oud",
+        "50-minute",
+        "4-week",
+        "code-as-music",
+        "forest-music",
+        "genome-music",
+        "constraint"
+      ]
+    },
+    "memory:memory/2026-05-25.md:77:99": {
+      "key": "memory:memory/2026-05-25.md:77:99",
+      "path": "memory/2026-05-25.md",
+      "startLine": 77,
+      "endLine": 99,
+      "source": "memory",
+      "snippet": "- New repos: flux-algebra, constraint-dialect, flux-julia, agent-operations - Key lesson: Casey's principle — educate don't sell, show code not claims ### Casey's Design Principle - READMEs should EDUCATE with code examples, not sell with adjectives - Engineers should have \"ah-ha\" moments from seeing the code, not marketing - Music is a recent side project, not the org identity ### constraint-toolkit (18,807 lines) - 27 modules, 19 experiments, 189 tests passing - features→889, classifier→800, benchmarks→604, validation→567, synthesizer→559 - Web demo (demo.py), CLI, README, API docs - Validation module: research claims NOT reproducible from code (r=+0.147 not -0.935) ### New Repos Create",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.40159203112125397,
+      "maxScore": 0.40159203112125397,
+      "firstRecalledAt": "2026-05-26T20:43:42.755Z",
+      "lastRecalledAt": "2026-05-26T20:43:42.755Z",
+      "queryHashes": [
+        "48ceddae3676"
+      ],
+      "recallDays": [
+        "2026-05-26"
+      ],
+      "conceptTags": [
+        "flux-algebra",
+        "constraint-dialect",
+        "flux-julia",
+        "agent-operations",
+        "ah-ha",
+        "constraint-toolkit",
+        "demo.py",
+        "0.147"
+      ]
+    },
+    "memory:memory/2026-05-25.md:237:257": {
+      "key": "memory:memory/2026-05-25.md:237:257",
+      "path": "memory/2026-05-25.md",
+      "startLine": 237,
+      "endLine": 257,
+      "source": "memory",
+      "snippet": "- Julia = constraint math (multiple dispatch for traditions) - Python = user interface (constraint-toolkit) - Rust = real-time audio (constraint-audio) - Go = fleet infra (openagent, ccc-os) - MLIR = formal verification (constraint-dialect) - All share LLVM backend ### Agents Used - GLM-5.1 (z.ai): 15+ subagents, workhorse for all code - Claude Code: session limit hit - Kimi CLI: creative modules (evolution, oracle, timeline, games) ### Session Totals - ~25 agent runs total (many timed out at 4m32s but identified issues) - ~30 repos CI fixed (direct + agent) - ~70 repos README upgraded - 4 OpenShell repos unarchived + upgraded - 5 new repos created - CI health: 30→52 green (73% improvement",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.39890630543231964,
+      "maxScore": 0.39890630543231964,
+      "firstRecalledAt": "2026-05-26T20:43:42.755Z",
+      "lastRecalledAt": "2026-05-26T20:43:42.755Z",
+      "queryHashes": [
+        "48ceddae3676"
+      ],
+      "recallDays": [
+        "2026-05-26"
+      ],
+      "conceptTags": [
+        "constraint-toolkit",
+        "real-time",
+        "constraint-audio",
+        "ccc-os",
+        "constraint-dialect",
+        "glm-5.1",
+        "z.ai",
+        "julia"
+      ]
+    },
+    "memory:memory/2026-05-26.md:78:95": {
+      "key": "memory:memory/2026-05-26.md:78:95",
+      "path": "memory/2026-05-26.md",
+      "startLine": 78,
+      "endLine": 95,
+      "source": "memory",
+      "snippet": "- Python wave 1: 15 repos - Python wave 2: 6 repos - Rust/C: 5 repos (arm-neon-eisenstein-bench, chess-engine, avx512-constraint-checker, bare-metal-plato, bytecode-verifier-c) - Node/TS: 39 repos - Total: 65 repos got CI added - Plus 16 repos already had ci.yml but no runs yet - cocapn-dreamer: unarchived, README added, re-archived - Estimated CI coverage: ~120/180 repos now have CI workflows **✅ Green (58 repos):** constraint-instrument, constraint-theory-core, constraint-theory-web, flux-memory, plato-training, cocapn-cli, flux-verify-api, polln, SuperInstance-papers, PersonalLog, sonar-vision, cocapn-core, agent-forge, ai-ranch, CascadeRouter, amplify-fishingtool, capitaine, capitaine-1,",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7582119256258011,
+      "maxScore": 0.38419078588485717,
+      "firstRecalledAt": "2026-05-27T14:28:08.339Z",
+      "lastRecalledAt": "2026-05-28T00:16:05.534Z",
+      "queryHashes": [
+        "09741fa7ba25",
+        "6ce974d204cb"
+      ],
+      "recallDays": [
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "router",
+        "rust/c",
+        "arm-neon-eisenstein-bench",
+        "chess-engine",
+        "avx512-constraint-checker",
+        "bare-metal-plato",
+        "bytecode-verifier-c",
+        "node/ts"
+      ]
+    },
+    "memory:memory/2026-05-25.md:19:39": {
+      "key": "memory:memory/2026-05-25.md:19:39",
+      "path": "memory/2026-05-25.md",
+      "startLine": 19,
+      "endLine": 39,
+      "source": "memory",
+      "snippet": "- Wave 3 agent pushed: fleet-stack (196), constraint-substrate (262), quality-gate-stream (222), triplet-miner (214), flux-verify-api (242), constraint-theory-web (375), rustfs (323) - Wave 4 (new pattern): plato-types (full rewrite + bug fixes), agent-field, captains-log, fleet-health-monitor, constraint-inference, fleet-router, collective-ai, plato-training - Wave 5 (new pattern): copilot-for-eclipse, snapkit-js, snapkit-v2, style-dna, spline-midi-smooth - Wave 6 (new pattern): flux-check-py, flux-fracture-c, polln, constraint-theory-rust-python, constraint-theory-engine-cpp-lua - All stub repos got READMEs: tensor-penrose, templates, tools, tests, state, swarm-code, vocabularies, flux-com",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3691723972558975,
+      "maxScore": 0.3691723972558975,
+      "firstRecalledAt": "2026-05-28T00:16:05.534Z",
+      "lastRecalledAt": "2026-05-28T00:16:05.534Z",
+      "queryHashes": [
+        "6ce974d204cb"
+      ],
+      "recallDays": [
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "router",
+        "fleet-stack",
+        "constraint-substrate",
+        "quality-gate-stream",
+        "triplet-miner",
+        "flux-verify-api",
+        "constraint-theory-web",
+        "plato-types"
+      ]
+    },
+    "memory:memory/2026-05-24.md:1:31": {
+      "key": "memory:memory/2026-05-24.md:1:31",
+      "path": "memory/2026-05-24.md",
+      "startLine": 1,
+      "endLine": 31,
+      "source": "memory",
+      "snippet": "# 2026-05-24 — Continuation Session ## Completed - [x] **PyPI publishing sweep**: constraint-synth 0.1.0 → 0.2.1, counterpoint-engine 0.1.0, flux-genome 0.1.0, flux-hyperbolic 0.1.0 all published. groove-analyzer retry queued (429 rate limit). - [x] **Play-along mode**: Full `play_along.py` module built and shipped - 6 strategies: complement, counterpoint, echo, bass, chordal, free - Auto key detection (Krumhansl-Schmuckler) - Auto strategy selection based on input density/tempo - 11 scales, scale-aware response generation - Render responses to audio via ConstraintSynth - 35 tests, all passing - [x] **Sound quality upgrade**: SoundEngine integrated from subagent - UnisonOscill",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.36882561445236206,
+      "maxScore": 0.36882561445236206,
+      "firstRecalledAt": "2026-05-28T00:16:05.534Z",
+      "lastRecalledAt": "2026-05-28T00:16:05.534Z",
+      "queryHashes": [
+        "6ce974d204cb"
+      ],
+      "recallDays": [
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "constraint-synth",
+        "0.1.0",
+        "0.2.1",
+        "counterpoint-engine",
+        "flux-genome",
+        "flux-hyperbolic",
+        "groove-analyzer",
+        "play-along"
+      ]
+    },
+    "memory:memory/2026-05-25.md:109:141": {
+      "key": "memory:memory/2026-05-25.md:109:141",
+      "path": "memory/2026-05-25.md",
+      "startLine": 109,
+      "endLine": 141,
+      "source": "memory",
+      "snippet": "- **openagent**: SuperInstance ecosystem knowledge (22 repos → 35 repos), 3 MCP tools, research skill, LLVM integration doc, fork strategy doc, dial theory, fleet conservation - **flux-genome**: stub → MusicalGenome (25-gene), GeneticAlgorithm, tradition DNA, 27 tests - **flux-hyperbolic**: stub → PoincaréBall, LorentzModel, TraditionEmbedding, Riemannian GD, 25 tests - **wiki, docs, superinstance-wiki, forgemaster, fm-research**: READMEs + navigation ### Branch Merges (all repos) - sunset-ecosystem: 11 branches merged, 6 conflict-resolved, 8 stale deleted - AI-Writings: 7 merged, 32 stale deleted, master→main - flux-tensor-midi: 600+ commit fleet-simulation branch merged - All other repos:",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3598167091608047,
+      "maxScore": 0.3598167091608047,
+      "firstRecalledAt": "2026-05-28T02:38:57.251Z",
+      "lastRecalledAt": "2026-05-28T02:38:57.251Z",
+      "queryHashes": [
+        "46d3445ddaad"
+      ],
+      "recallDays": [
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "embedding",
+        "flux-genome",
+        "25-gene",
+        "flux-hyperbolic",
+        "superinstance-wiki",
+        "fm-research",
+        "sunset-ecosystem",
+        "conflict-resolved"
       ]
     }
   }
