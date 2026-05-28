@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-28T02:38:57.251Z",
+  "updatedAt": "2026-05-28T05:46:19.319Z",
   "entries": {
     "memory:memory/2026-05-11.md:163:200": {
       "key": "memory:memory/2026-05-11.md:163:200",
@@ -5371,18 +5371,20 @@
       "endLine": 179,
       "source": "memory",
       "snippet": "- **PLATO ecosystem** (4 repos): All READMEs rewritten teach-don't-pitch, plato-training root cleaned (23→20), all pushed. - **Forgemaster** (282→13 root files): docs/ with 60+ docs, research/ with 300+ docs, fleet/ with coordination modules, archive/ for bottles/logs. PR #6 opened. Reorganization into ~10 category directories in progress. - **Music repos** (11 repos): Polish agent still running. ### WAV Audio Files - constraint-synth/examples/output/: bach_organ, joplin_piano, debussy_pad, coltrane_sax, aphex_glitch - examples/full_pipeline_output.wav (end-to-end 7-stage demo) ## Key Insights 1. **Deadband funnel = motor accessibility primitive** (2.4→8.2 potential) 2. **Audio playback so",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.40883157849311824,
+      "totalScore": 0.7872188895940779,
       "maxScore": 0.40883157849311824,
       "firstRecalledAt": "2026-05-23T06:11:52.290Z",
-      "lastRecalledAt": "2026-05-23T06:11:52.290Z",
+      "lastRecalledAt": "2026-05-28T05:46:19.319Z",
       "queryHashes": [
-        "e25ed8886c61"
+        "e25ed8886c61",
+        "92e70096f193"
       ],
       "recallDays": [
-        "2026-05-22"
+        "2026-05-22",
+        "2026-05-27"
       ],
       "conceptTags": [
         "teach-don",
@@ -5592,18 +5594,20 @@
       "endLine": 248,
       "source": "memory",
       "snippet": "- **Stem hashing backported** to eisenstein-embed (24 new tests) - **5 new plato-training modules**: tutor_judge, semantic_store, semantic_matcher, eisenstein_encoder, device_router - **IntelligenceRoom** wired with 4-tier cascade (GPU→CPU→iGPU→NPU) - **Heterogeneous benchmark**: CUDA 5.4 TFLOPS, ONNX CPU 58K qps, iGPU 89% of CUDA - **NPU bridge module** created (waiting on Ryzen AI SDK install) - **PyPI 4/7 LIVE**: plato-core, tensor-spline, eisenstein-embed, micro-onnx - **npm 7/7 LIVE**: all packages - **crates.io 5/5 LIVE**: all Rust crates - **Org audit** (49 repos): Top — flux-engine-c (10/10), eisenstein-embed (9/10), device-router (9/10) - **Cross-linking** added to 7 repos ## Beta",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.3584975451231003,
-      "maxScore": 0.3584975451231003,
+      "totalScore": 0.7270742803812027,
+      "maxScore": 0.3685767352581024,
       "firstRecalledAt": "2026-05-23T14:13:46.902Z",
-      "lastRecalledAt": "2026-05-23T14:13:46.902Z",
+      "lastRecalledAt": "2026-05-28T05:46:19.319Z",
       "queryHashes": [
-        "8b539074605f"
+        "8b539074605f",
+        "92e70096f193"
       ],
       "recallDays": [
-        "2026-05-23"
+        "2026-05-23",
+        "2026-05-27"
       ],
       "conceptTags": [
         "router",
@@ -6708,6 +6712,99 @@
         "fm-research",
         "sunset-ecosystem",
         "conflict-resolved"
+      ]
+    },
+    "memory:memory/2026-05-20.md:468:496": {
+      "key": "memory:memory/2026-05-20.md:468:496",
+      "path": "memory/2026-05-20.md",
+      "startLine": 468,
+      "endLine": 496,
+      "source": "memory",
+      "snippet": "- **Stem hashing backported** to eisenstein-embed (24 new tests) - **5 new plato-training modules**: tutor_judge, semantic_store, semantic_matcher, eisenstein_encoder, device_router - **IntelligenceRoom** wired with 4-tier cascade (GPU→CPU→iGPU→NPU) - **Heterogeneous benchmark**: CUDA 5.4 TFLOPS, ONNX CPU 58K qps, iGPU 89% of CUDA - **NPU bridge module** created (waiting on Ryzen AI SDK install) - **PyPI 4/7 LIVE**: plato-core, tensor-spline, eisenstein-embed, micro-onnx - **npm 7/7 LIVE**: all packages - **crates.io 5/5 LIVE**: all Rust crates - **Org audit** (49 repos): Top — flux-engine-c (10/10), eisenstein-embed (9/10), device-router (9/10) - **Cross-linking** added to 7 repos ## Beta",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.36907764375209806,
+      "maxScore": 0.36907764375209806,
+      "firstRecalledAt": "2026-05-28T05:46:19.319Z",
+      "lastRecalledAt": "2026-05-28T05:46:19.319Z",
+      "queryHashes": [
+        "92e70096f193"
+      ],
+      "recallDays": [
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "router",
+        "eisenstein-embed",
+        "plato-training",
+        "tutor-judge",
+        "semantic-store",
+        "semantic-matcher",
+        "eisenstein-encoder",
+        "device-router"
+      ]
+    },
+    "memory:memory/2026-05-22.md:304:325": {
+      "key": "memory:memory/2026-05-22.md:304:325",
+      "path": "memory/2026-05-22.md",
+      "startLine": 304,
+      "endLine": 325,
+      "source": "memory",
+      "snippet": "- **Education**: START-HERE (4K words) + LEARNING-PATHS (7 paths) + LINKS (59KB) - **Cross-language substrate**: Rust 30 ✅ + C 41 ✅ + Python 34 ✅ ### Still TODO - [ ] Break constraint-synth improvements into smaller Claude Code tasks (polyBLEP alone, biquad alone, etc.) - [ ] Dispatch Round 3 beta testers on R2-fixed code - [ ] Build DawDreamer bridge module (constraint_audio.py) - [ ] Install Surge XT VST3 for real VST demo - [ ] Evaluate fundsp as Rust audio backend - [ ] Push constraint-substrate, constraint-viz to GitHub as standalone repos - [ ] Retry PyPI publishing (cooldown should be clear) ### Casey's Flow State Insight (22:29 AKDT) Casey described performing as \"following the sh",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3613159507513046,
+      "maxScore": 0.3613159507513046,
+      "firstRecalledAt": "2026-05-28T05:46:19.319Z",
+      "lastRecalledAt": "2026-05-28T05:46:19.319Z",
+      "queryHashes": [
+        "92e70096f193"
+      ],
+      "recallDays": [
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "start-here",
+        "learning-paths",
+        "cross-language",
+        "constraint-synth",
+        "r2-fixed",
+        "constraint-audio.py",
+        "constraint-substrate",
+        "constraint-viz"
+      ]
+    },
+    "memory:memory/2026-05-23.md:484:503": {
+      "key": "memory:memory/2026-05-23.md:484:503",
+      "path": "memory/2026-05-23.md",
+      "startLine": 484,
+      "endLine": 503,
+      "source": "memory",
+      "snippet": "- **Drum Rack**: Full StepSequencer (hits/rolls/flams/humanize/Euclidean), 6 presets, 48 tests - **DawDreamer Bridge**: VST/SF2 rendering, MockRenderer, 27 tests - **Exercise Generator**: 36 templates (4 topics × 3 difficulties), 59 tests - **FunDSP Eval**: YES — adopt as Rust audio backend + CPAL ### Wave 5-6: Creative + Research - **Constraint Tarot**: Live at superinstance.github.io/constraint-theory-web/constraint-tarot.html — 100 readings, animated flips - **Accessibility Paper**: 5 ladder levels, ~2800 words - **Annotated Score**: Spec + SVG prototype for constraint-overlay sheet music - **Flow Research**: 5 testable hypotheses, experimental design (100 musicians, 30 days) - **Syria-O",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.35540643632411956,
+      "maxScore": 0.35540643632411956,
+      "firstRecalledAt": "2026-05-28T05:46:19.319Z",
+      "lastRecalledAt": "2026-05-28T05:46:19.319Z",
+      "queryHashes": [
+        "92e70096f193"
+      ],
+      "recallDays": [
+        "2026-05-27"
+      ],
+      "conceptTags": [
+        "vst/sf2",
+        "5-6",
+        "constraint-overlay",
+        "syria-o",
+        "drum",
+        "rack",
+        "full",
+        "stepsequencer"
       ]
     }
   }
