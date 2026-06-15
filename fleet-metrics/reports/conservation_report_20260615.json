@@ -1,0 +1,931 @@
+{
+  "generated_at": "2026-06-15T22:28:26.454398Z",
+  "data_source": "theoretical",
+  "formula": "delta(n) = (1/sqrt(n)) * (1 - 3/(2n))",
+  "budget_model": "gamma + eta = C",
+  "headline": {
+    "n_agents": 50,
+    "coupling_cancellation_rate_pct": 86.2821,
+    "target_cancellation_pct": 86.4,
+    "within_tolerance": true,
+    "productive_spend_pct": 86.2821,
+    "overhead_spend_pct": 13.7179
+  },
+  "cost_savings": {
+    "peak_overhead": {
+      "n": 5,
+      "overhead_pct": 31.305,
+      "per_agent_overhead": 0.0626099
+    },
+    "target_fleet": {
+      "n": 50,
+      "overhead_pct": 13.7179,
+      "per_agent_overhead": 0.00274357
+    },
+    "overhead_reduction_pct_points": 17.5871,
+    "per_agent_overhead_reduction_factor": 22.82,
+    "description": "Scaling from 5 to 50 agents reduces overhead by 17.59 percentage points and cuts per-agent coordination cost by 22.82x."
+  },
+  "agent_budget_table": [
+    {
+      "n": 1,
+      "C": 1.0,
+      "gamma": 1.0,
+      "eta": 0.0,
+      "productive_pct": 100.0,
+      "overhead_pct": 0.0,
+      "per_agent_overhead": 0.0
+    },
+    {
+      "n": 2,
+      "C": 1.0,
+      "gamma": 0.823223,
+      "eta": 0.176777,
+      "productive_pct": 82.3223,
+      "overhead_pct": 17.6777,
+      "per_agent_overhead": 0.08838835
+    },
+    {
+      "n": 3,
+      "C": 1.0,
+      "gamma": 0.711325,
+      "eta": 0.288675,
+      "productive_pct": 71.1325,
+      "overhead_pct": 28.8675,
+      "per_agent_overhead": 0.09622504
+    },
+    {
+      "n": 4,
+      "C": 1.0,
+      "gamma": 0.6875,
+      "eta": 0.3125,
+      "productive_pct": 68.75,
+      "overhead_pct": 31.25,
+      "per_agent_overhead": 0.078125
+    },
+    {
+      "n": 5,
+      "C": 1.0,
+      "gamma": 0.68695,
+      "eta": 0.31305,
+      "productive_pct": 68.695,
+      "overhead_pct": 31.305,
+      "per_agent_overhead": 0.0626099
+    },
+    {
+      "n": 6,
+      "C": 1.0,
+      "gamma": 0.693814,
+      "eta": 0.306186,
+      "productive_pct": 69.3814,
+      "overhead_pct": 30.6186,
+      "per_agent_overhead": 0.05103104
+    },
+    {
+      "n": 7,
+      "C": 1.0,
+      "gamma": 0.703028,
+      "eta": 0.296972,
+      "productive_pct": 70.3028,
+      "overhead_pct": 29.6972,
+      "per_agent_overhead": 0.04242458
+    },
+    {
+      "n": 8,
+      "C": 1.0,
+      "gamma": 0.712738,
+      "eta": 0.287262,
+      "productive_pct": 71.2738,
+      "overhead_pct": 28.7262,
+      "per_agent_overhead": 0.03590777
+    },
+    {
+      "n": 9,
+      "C": 1.0,
+      "gamma": 0.722222,
+      "eta": 0.277778,
+      "productive_pct": 72.2222,
+      "overhead_pct": 27.7778,
+      "per_agent_overhead": 0.0308642
+    },
+    {
+      "n": 10,
+      "C": 1.0,
+      "gamma": 0.731206,
+      "eta": 0.268794,
+      "productive_pct": 73.1206,
+      "overhead_pct": 26.8794,
+      "per_agent_overhead": 0.02687936
+    },
+    {
+      "n": 11,
+      "C": 1.0,
+      "gamma": 0.739604,
+      "eta": 0.260396,
+      "productive_pct": 73.9604,
+      "overhead_pct": 26.0396,
+      "per_agent_overhead": 0.02367238
+    },
+    {
+      "n": 12,
+      "C": 1.0,
+      "gamma": 0.747409,
+      "eta": 0.252591,
+      "productive_pct": 74.7409,
+      "overhead_pct": 25.2591,
+      "per_agent_overhead": 0.02104923
+    },
+    {
+      "n": 13,
+      "C": 1.0,
+      "gamma": 0.754652,
+      "eta": 0.245348,
+      "productive_pct": 75.4652,
+      "overhead_pct": 24.5348,
+      "per_agent_overhead": 0.01887294
+    },
+    {
+      "n": 14,
+      "C": 1.0,
+      "gamma": 0.761374,
+      "eta": 0.238626,
+      "productive_pct": 76.1374,
+      "overhead_pct": 23.8626,
+      "per_agent_overhead": 0.01704472
+    },
+    {
+      "n": 15,
+      "C": 1.0,
+      "gamma": 0.767621,
+      "eta": 0.232379,
+      "productive_pct": 76.7621,
+      "overhead_pct": 23.2379,
+      "per_agent_overhead": 0.01549193
+    },
+    {
+      "n": 16,
+      "C": 1.0,
+      "gamma": 0.773438,
+      "eta": 0.226562,
+      "productive_pct": 77.3438,
+      "overhead_pct": 22.6562,
+      "per_agent_overhead": 0.01416016
+    },
+    {
+      "n": 17,
+      "C": 1.0,
+      "gamma": 0.778865,
+      "eta": 0.221135,
+      "productive_pct": 77.8865,
+      "overhead_pct": 22.1135,
+      "per_agent_overhead": 0.01300797
+    },
+    {
+      "n": 18,
+      "C": 1.0,
+      "gamma": 0.78394,
+      "eta": 0.21606,
+      "productive_pct": 78.394,
+      "overhead_pct": 21.606,
+      "per_agent_overhead": 0.01200336
+    },
+    {
+      "n": 19,
+      "C": 1.0,
+      "gamma": 0.788696,
+      "eta": 0.211304,
+      "productive_pct": 78.8696,
+      "overhead_pct": 21.1304,
+      "per_agent_overhead": 0.01112126
+    },
+    {
+      "n": 20,
+      "C": 1.0,
+      "gamma": 0.793164,
+      "eta": 0.206836,
+      "productive_pct": 79.3164,
+      "overhead_pct": 20.6836,
+      "per_agent_overhead": 0.01034181
+    },
+    {
+      "n": 21,
+      "C": 1.0,
+      "gamma": 0.797369,
+      "eta": 0.202631,
+      "productive_pct": 79.7369,
+      "overhead_pct": 20.2631,
+      "per_agent_overhead": 0.00964909
+    },
+    {
+      "n": 22,
+      "C": 1.0,
+      "gamma": 0.801336,
+      "eta": 0.198664,
+      "productive_pct": 80.1336,
+      "overhead_pct": 19.8664,
+      "per_agent_overhead": 0.0090302
+    },
+    {
+      "n": 23,
+      "C": 1.0,
+      "gamma": 0.805084,
+      "eta": 0.194916,
+      "productive_pct": 80.5084,
+      "overhead_pct": 19.4916,
+      "per_agent_overhead": 0.00847459
+    },
+    {
+      "n": 24,
+      "C": 1.0,
+      "gamma": 0.808634,
+      "eta": 0.191366,
+      "productive_pct": 80.8634,
+      "overhead_pct": 19.1366,
+      "per_agent_overhead": 0.0079736
+    },
+    {
+      "n": 25,
+      "C": 1.0,
+      "gamma": 0.812,
+      "eta": 0.188,
+      "productive_pct": 81.2,
+      "overhead_pct": 18.8,
+      "per_agent_overhead": 0.00752
+    },
+    {
+      "n": 26,
+      "C": 1.0,
+      "gamma": 0.815198,
+      "eta": 0.184802,
+      "productive_pct": 81.5198,
+      "overhead_pct": 18.4802,
+      "per_agent_overhead": 0.00710776
+    },
+    {
+      "n": 27,
+      "C": 1.0,
+      "gamma": 0.818242,
+      "eta": 0.181758,
+      "productive_pct": 81.8242,
+      "overhead_pct": 18.1758,
+      "per_agent_overhead": 0.00673179
+    },
+    {
+      "n": 28,
+      "C": 1.0,
+      "gamma": 0.821142,
+      "eta": 0.178858,
+      "productive_pct": 82.1142,
+      "overhead_pct": 17.8858,
+      "per_agent_overhead": 0.00638779
+    },
+    {
+      "n": 29,
+      "C": 1.0,
+      "gamma": 0.82391,
+      "eta": 0.17609,
+      "productive_pct": 82.391,
+      "overhead_pct": 17.609,
+      "per_agent_overhead": 0.00607208
+    },
+    {
+      "n": 30,
+      "C": 1.0,
+      "gamma": 0.826555,
+      "eta": 0.173445,
+      "productive_pct": 82.6555,
+      "overhead_pct": 17.3445,
+      "per_agent_overhead": 0.00578152
+    },
+    {
+      "n": 31,
+      "C": 1.0,
+      "gamma": 0.829085,
+      "eta": 0.170915,
+      "productive_pct": 82.9085,
+      "overhead_pct": 17.0915,
+      "per_agent_overhead": 0.00551338
+    },
+    {
+      "n": 32,
+      "C": 1.0,
+      "gamma": 0.83151,
+      "eta": 0.16849,
+      "productive_pct": 83.151,
+      "overhead_pct": 16.849,
+      "per_agent_overhead": 0.00526532
+    },
+    {
+      "n": 33,
+      "C": 1.0,
+      "gamma": 0.833835,
+      "eta": 0.166165,
+      "productive_pct": 83.3835,
+      "overhead_pct": 16.6165,
+      "per_agent_overhead": 0.0050353
+    },
+    {
+      "n": 34,
+      "C": 1.0,
+      "gamma": 0.836068,
+      "eta": 0.163932,
+      "productive_pct": 83.6068,
+      "overhead_pct": 16.3932,
+      "per_agent_overhead": 0.00482154
+    },
+    {
+      "n": 35,
+      "C": 1.0,
+      "gamma": 0.838213,
+      "eta": 0.161787,
+      "productive_pct": 83.8213,
+      "overhead_pct": 16.1787,
+      "per_agent_overhead": 0.00462248
+    },
+    {
+      "n": 36,
+      "C": 1.0,
+      "gamma": 0.840278,
+      "eta": 0.159722,
+      "productive_pct": 84.0278,
+      "overhead_pct": 15.9722,
+      "per_agent_overhead": 0.00443673
+    },
+    {
+      "n": 37,
+      "C": 1.0,
+      "gamma": 0.842266,
+      "eta": 0.157734,
+      "productive_pct": 84.2266,
+      "overhead_pct": 15.7734,
+      "per_agent_overhead": 0.00426309
+    },
+    {
+      "n": 38,
+      "C": 1.0,
+      "gamma": 0.844182,
+      "eta": 0.155818,
+      "productive_pct": 84.4182,
+      "overhead_pct": 15.5818,
+      "per_agent_overhead": 0.00410047
+    },
+    {
+      "n": 39,
+      "C": 1.0,
+      "gamma": 0.846031,
+      "eta": 0.153969,
+      "productive_pct": 84.6031,
+      "overhead_pct": 15.3969,
+      "per_agent_overhead": 0.00394793
+    },
+    {
+      "n": 40,
+      "C": 1.0,
+      "gamma": 0.847815,
+      "eta": 0.152185,
+      "productive_pct": 84.7815,
+      "overhead_pct": 15.2185,
+      "per_agent_overhead": 0.00380462
+    },
+    {
+      "n": 41,
+      "C": 1.0,
+      "gamma": 0.84954,
+      "eta": 0.15046,
+      "productive_pct": 84.954,
+      "overhead_pct": 15.046,
+      "per_agent_overhead": 0.00366976
+    },
+    {
+      "n": 42,
+      "C": 1.0,
+      "gamma": 0.851207,
+      "eta": 0.148793,
+      "productive_pct": 85.1207,
+      "overhead_pct": 14.8793,
+      "per_agent_overhead": 0.00354268
+    },
+    {
+      "n": 43,
+      "C": 1.0,
+      "gamma": 0.852821,
+      "eta": 0.147179,
+      "productive_pct": 85.2821,
+      "overhead_pct": 14.7179,
+      "per_agent_overhead": 0.00342276
+    },
+    {
+      "n": 44,
+      "C": 1.0,
+      "gamma": 0.854384,
+      "eta": 0.145616,
+      "productive_pct": 85.4384,
+      "overhead_pct": 14.5616,
+      "per_agent_overhead": 0.00330946
+    },
+    {
+      "n": 45,
+      "C": 1.0,
+      "gamma": 0.855898,
+      "eta": 0.144102,
+      "productive_pct": 85.5898,
+      "overhead_pct": 14.4102,
+      "per_agent_overhead": 0.00320227
+    },
+    {
+      "n": 46,
+      "C": 1.0,
+      "gamma": 0.857366,
+      "eta": 0.142634,
+      "productive_pct": 85.7366,
+      "overhead_pct": 14.2634,
+      "per_agent_overhead": 0.00310074
+    },
+    {
+      "n": 47,
+      "C": 1.0,
+      "gamma": 0.85879,
+      "eta": 0.14121,
+      "productive_pct": 85.879,
+      "overhead_pct": 14.121,
+      "per_agent_overhead": 0.00300446
+    },
+    {
+      "n": 48,
+      "C": 1.0,
+      "gamma": 0.860173,
+      "eta": 0.139827,
+      "productive_pct": 86.0173,
+      "overhead_pct": 13.9827,
+      "per_agent_overhead": 0.00291306
+    },
+    {
+      "n": 49,
+      "C": 1.0,
+      "gamma": 0.861516,
+      "eta": 0.138484,
+      "productive_pct": 86.1516,
+      "overhead_pct": 13.8484,
+      "per_agent_overhead": 0.0028262
+    },
+    {
+      "n": 50,
+      "C": 1.0,
+      "gamma": 0.862821,
+      "eta": 0.137179,
+      "productive_pct": 86.2821,
+      "overhead_pct": 13.7179,
+      "per_agent_overhead": 0.00274357
+    },
+    {
+      "n": 51,
+      "C": 1.0,
+      "gamma": 0.86409,
+      "eta": 0.13591,
+      "productive_pct": 86.409,
+      "overhead_pct": 13.591,
+      "per_agent_overhead": 0.00266489
+    },
+    {
+      "n": 52,
+      "C": 1.0,
+      "gamma": 0.865325,
+      "eta": 0.134675,
+      "productive_pct": 86.5325,
+      "overhead_pct": 13.4675,
+      "per_agent_overhead": 0.0025899
+    },
+    {
+      "n": 53,
+      "C": 1.0,
+      "gamma": 0.866527,
+      "eta": 0.133473,
+      "productive_pct": 86.6527,
+      "overhead_pct": 13.3473,
+      "per_agent_overhead": 0.00251836
+    },
+    {
+      "n": 54,
+      "C": 1.0,
+      "gamma": 0.867697,
+      "eta": 0.132303,
+      "productive_pct": 86.7697,
+      "overhead_pct": 13.2303,
+      "per_agent_overhead": 0.00245005
+    },
+    {
+      "n": 55,
+      "C": 1.0,
+      "gamma": 0.868837,
+      "eta": 0.131163,
+      "productive_pct": 86.8837,
+      "overhead_pct": 13.1163,
+      "per_agent_overhead": 0.00238477
+    },
+    {
+      "n": 56,
+      "C": 1.0,
+      "gamma": 0.869949,
+      "eta": 0.130051,
+      "productive_pct": 86.9949,
+      "overhead_pct": 13.0051,
+      "per_agent_overhead": 0.00232234
+    },
+    {
+      "n": 57,
+      "C": 1.0,
+      "gamma": 0.871032,
+      "eta": 0.128968,
+      "productive_pct": 87.1032,
+      "overhead_pct": 12.8968,
+      "per_agent_overhead": 0.00226259
+    },
+    {
+      "n": 58,
+      "C": 1.0,
+      "gamma": 0.872089,
+      "eta": 0.127911,
+      "productive_pct": 87.2089,
+      "overhead_pct": 12.7911,
+      "per_agent_overhead": 0.00220535
+    },
+    {
+      "n": 59,
+      "C": 1.0,
+      "gamma": 0.873121,
+      "eta": 0.126879,
+      "productive_pct": 87.3121,
+      "overhead_pct": 12.6879,
+      "per_agent_overhead": 0.00215049
+    },
+    {
+      "n": 60,
+      "C": 1.0,
+      "gamma": 0.874128,
+      "eta": 0.125872,
+      "productive_pct": 87.4128,
+      "overhead_pct": 12.5872,
+      "per_agent_overhead": 0.00209787
+    },
+    {
+      "n": 61,
+      "C": 1.0,
+      "gamma": 0.875112,
+      "eta": 0.124888,
+      "productive_pct": 87.5112,
+      "overhead_pct": 12.4888,
+      "per_agent_overhead": 0.00204735
+    },
+    {
+      "n": 62,
+      "C": 1.0,
+      "gamma": 0.876072,
+      "eta": 0.123928,
+      "productive_pct": 87.6072,
+      "overhead_pct": 12.3928,
+      "per_agent_overhead": 0.00199883
+    },
+    {
+      "n": 63,
+      "C": 1.0,
+      "gamma": 0.877012,
+      "eta": 0.122988,
+      "productive_pct": 87.7012,
+      "overhead_pct": 12.2988,
+      "per_agent_overhead": 0.0019522
+    },
+    {
+      "n": 64,
+      "C": 1.0,
+      "gamma": 0.87793,
+      "eta": 0.12207,
+      "productive_pct": 87.793,
+      "overhead_pct": 12.207,
+      "per_agent_overhead": 0.00190735
+    },
+    {
+      "n": 65,
+      "C": 1.0,
+      "gamma": 0.878828,
+      "eta": 0.121172,
+      "productive_pct": 87.8828,
+      "overhead_pct": 12.1172,
+      "per_agent_overhead": 0.00186419
+    },
+    {
+      "n": 66,
+      "C": 1.0,
+      "gamma": 0.879706,
+      "eta": 0.120294,
+      "productive_pct": 87.9706,
+      "overhead_pct": 12.0294,
+      "per_agent_overhead": 0.00182264
+    },
+    {
+      "n": 67,
+      "C": 1.0,
+      "gamma": 0.880566,
+      "eta": 0.119434,
+      "productive_pct": 88.0566,
+      "overhead_pct": 11.9434,
+      "per_agent_overhead": 0.0017826
+    },
+    {
+      "n": 68,
+      "C": 1.0,
+      "gamma": 0.881407,
+      "eta": 0.118593,
+      "productive_pct": 88.1407,
+      "overhead_pct": 11.8593,
+      "per_agent_overhead": 0.00174401
+    },
+    {
+      "n": 69,
+      "C": 1.0,
+      "gamma": 0.882231,
+      "eta": 0.117769,
+      "productive_pct": 88.2231,
+      "overhead_pct": 11.7769,
+      "per_agent_overhead": 0.00170679
+    },
+    {
+      "n": 70,
+      "C": 1.0,
+      "gamma": 0.883038,
+      "eta": 0.116962,
+      "productive_pct": 88.3038,
+      "overhead_pct": 11.6962,
+      "per_agent_overhead": 0.00167088
+    },
+    {
+      "n": 71,
+      "C": 1.0,
+      "gamma": 0.883829,
+      "eta": 0.116171,
+      "productive_pct": 88.3829,
+      "overhead_pct": 11.6171,
+      "per_agent_overhead": 0.00163621
+    },
+    {
+      "n": 72,
+      "C": 1.0,
+      "gamma": 0.884604,
+      "eta": 0.115396,
+      "productive_pct": 88.4604,
+      "overhead_pct": 11.5396,
+      "per_agent_overhead": 0.00160272
+    },
+    {
+      "n": 73,
+      "C": 1.0,
+      "gamma": 0.885364,
+      "eta": 0.114636,
+      "productive_pct": 88.5364,
+      "overhead_pct": 11.4636,
+      "per_agent_overhead": 0.00157036
+    },
+    {
+      "n": 74,
+      "C": 1.0,
+      "gamma": 0.886109,
+      "eta": 0.113891,
+      "productive_pct": 88.6109,
+      "overhead_pct": 11.3891,
+      "per_agent_overhead": 0.00153907
+    },
+    {
+      "n": 75,
+      "C": 1.0,
+      "gamma": 0.886839,
+      "eta": 0.113161,
+      "productive_pct": 88.6839,
+      "overhead_pct": 11.3161,
+      "per_agent_overhead": 0.00150881
+    },
+    {
+      "n": 76,
+      "C": 1.0,
+      "gamma": 0.887556,
+      "eta": 0.112444,
+      "productive_pct": 88.7556,
+      "overhead_pct": 11.2444,
+      "per_agent_overhead": 0.00147952
+    },
+    {
+      "n": 77,
+      "C": 1.0,
+      "gamma": 0.888259,
+      "eta": 0.111741,
+      "productive_pct": 88.8259,
+      "overhead_pct": 11.1741,
+      "per_agent_overhead": 0.00145118
+    },
+    {
+      "n": 78,
+      "C": 1.0,
+      "gamma": 0.88895,
+      "eta": 0.11105,
+      "productive_pct": 88.895,
+      "overhead_pct": 11.105,
+      "per_agent_overhead": 0.00142372
+    },
+    {
+      "n": 79,
+      "C": 1.0,
+      "gamma": 0.889627,
+      "eta": 0.110373,
+      "productive_pct": 88.9627,
+      "overhead_pct": 11.0373,
+      "per_agent_overhead": 0.00139712
+    },
+    {
+      "n": 80,
+      "C": 1.0,
+      "gamma": 0.890293,
+      "eta": 0.109707,
+      "productive_pct": 89.0293,
+      "overhead_pct": 10.9707,
+      "per_agent_overhead": 0.00137134
+    },
+    {
+      "n": 81,
+      "C": 1.0,
+      "gamma": 0.890947,
+      "eta": 0.109053,
+      "productive_pct": 89.0947,
+      "overhead_pct": 10.9053,
+      "per_agent_overhead": 0.00134634
+    },
+    {
+      "n": 82,
+      "C": 1.0,
+      "gamma": 0.891589,
+      "eta": 0.108411,
+      "productive_pct": 89.1589,
+      "overhead_pct": 10.8411,
+      "per_agent_overhead": 0.00132209
+    },
+    {
+      "n": 83,
+      "C": 1.0,
+      "gamma": 0.892219,
+      "eta": 0.107781,
+      "productive_pct": 89.2219,
+      "overhead_pct": 10.7781,
+      "per_agent_overhead": 0.00129856
+    },
+    {
+      "n": 84,
+      "C": 1.0,
+      "gamma": 0.892839,
+      "eta": 0.107161,
+      "productive_pct": 89.2839,
+      "overhead_pct": 10.7161,
+      "per_agent_overhead": 0.00127572
+    },
+    {
+      "n": 85,
+      "C": 1.0,
+      "gamma": 0.893449,
+      "eta": 0.106551,
+      "productive_pct": 89.3449,
+      "overhead_pct": 10.6551,
+      "per_agent_overhead": 0.00125354
+    },
+    {
+      "n": 86,
+      "C": 1.0,
+      "gamma": 0.894048,
+      "eta": 0.105952,
+      "productive_pct": 89.4048,
+      "overhead_pct": 10.5952,
+      "per_agent_overhead": 0.001232
+    },
+    {
+      "n": 87,
+      "C": 1.0,
+      "gamma": 0.894637,
+      "eta": 0.105363,
+      "productive_pct": 89.4637,
+      "overhead_pct": 10.5363,
+      "per_agent_overhead": 0.00121107
+    },
+    {
+      "n": 88,
+      "C": 1.0,
+      "gamma": 0.895217,
+      "eta": 0.104783,
+      "productive_pct": 89.5217,
+      "overhead_pct": 10.4783,
+      "per_agent_overhead": 0.00119072
+    },
+    {
+      "n": 89,
+      "C": 1.0,
+      "gamma": 0.895787,
+      "eta": 0.104213,
+      "productive_pct": 89.5787,
+      "overhead_pct": 10.4213,
+      "per_agent_overhead": 0.00117094
+    },
+    {
+      "n": 90,
+      "C": 1.0,
+      "gamma": 0.896348,
+      "eta": 0.103652,
+      "productive_pct": 89.6348,
+      "overhead_pct": 10.3652,
+      "per_agent_overhead": 0.00115169
+    },
+    {
+      "n": 91,
+      "C": 1.0,
+      "gamma": 0.896899,
+      "eta": 0.103101,
+      "productive_pct": 89.6899,
+      "overhead_pct": 10.3101,
+      "per_agent_overhead": 0.00113297
+    },
+    {
+      "n": 92,
+      "C": 1.0,
+      "gamma": 0.897443,
+      "eta": 0.102557,
+      "productive_pct": 89.7443,
+      "overhead_pct": 10.2557,
+      "per_agent_overhead": 0.00111475
+    },
+    {
+      "n": 93,
+      "C": 1.0,
+      "gamma": 0.897977,
+      "eta": 0.102023,
+      "productive_pct": 89.7977,
+      "overhead_pct": 10.2023,
+      "per_agent_overhead": 0.00109702
+    },
+    {
+      "n": 94,
+      "C": 1.0,
+      "gamma": 0.898504,
+      "eta": 0.101496,
+      "productive_pct": 89.8504,
+      "overhead_pct": 10.1496,
+      "per_agent_overhead": 0.00107975
+    },
+    {
+      "n": 95,
+      "C": 1.0,
+      "gamma": 0.899022,
+      "eta": 0.100978,
+      "productive_pct": 89.9022,
+      "overhead_pct": 10.0978,
+      "per_agent_overhead": 0.00106292
+    },
+    {
+      "n": 96,
+      "C": 1.0,
+      "gamma": 0.899533,
+      "eta": 0.100467,
+      "productive_pct": 89.9533,
+      "overhead_pct": 10.0467,
+      "per_agent_overhead": 0.00104653
+    },
+    {
+      "n": 97,
+      "C": 1.0,
+      "gamma": 0.900036,
+      "eta": 0.099964,
+      "productive_pct": 90.0036,
+      "overhead_pct": 9.9964,
+      "per_agent_overhead": 0.00103056
+    },
+    {
+      "n": 98,
+      "C": 1.0,
+      "gamma": 0.900531,
+      "eta": 0.099469,
+      "productive_pct": 90.0531,
+      "overhead_pct": 9.9469,
+      "per_agent_overhead": 0.00101499
+    },
+    {
+      "n": 99,
+      "C": 1.0,
+      "gamma": 0.901019,
+      "eta": 0.098981,
+      "productive_pct": 90.1019,
+      "overhead_pct": 9.8981,
+      "per_agent_overhead": 0.00099981
+    },
+    {
+      "n": 100,
+      "C": 1.0,
+      "gamma": 0.9015,
+      "eta": 0.0985,
+      "productive_pct": 90.15,
+      "overhead_pct": 9.85,
+      "per_agent_overhead": 0.000985
+    }
+  ]
+}
